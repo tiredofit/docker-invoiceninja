@@ -18,13 +18,8 @@ if [ ! -f "${NGINX_WEBROOT}"/server.php ]; then
         if [ ! -d "/data/storage" ]; then
             cp -R "${NGINX_WEBROOT}"/storage /data
         fi
-        if [ ! -d "/data/Modules" ]; then
-            cp -R "${NGINX_WEBROOT}"/Modules /data
-        fi
         rm -rf "${NGINX_WEBROOT}"/storage
         ln -s /data/storage "${NGINX_WEBROOT}"/storage
-        rm -rf "${NGINX_WEBROOT}"/Modules
-        ln -s /data/Modules "${NGINX_WEBROOT}"/Modules
         ln -sf /data/config "${NGINX_WEBROOT}"/.env
         touch /data/config
         chown "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"/.env
@@ -44,7 +39,7 @@ else
             cp -R /assets/install/* "${NGINX_WEBROOT}"
             chown -R "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"
             cd "${NGINX_WEBROOT}"|| exit
-#            silent sudo -u "${NGINX_USER}" php artisan freescout:after-app-update
+            silent sudo -u "${NGINX_USER}" php artisan nina:post-update
             sed -i --follow-symlinks "1 i\
             ${INVOICENINJA_VERSION} upgraded on $(date)" /www/html/.invoiceninja-version
         fi
@@ -57,13 +52,6 @@ chown -R "${NGINX_USER}":"${NGINX_GROUP}" /www/logs/invoiceninja
 rm -rf "${NGINX_WEBROOT}"/storage/logs
 ln -sf /www/logs/invoiceninja "${NGINX_WEBROOT}"/storage/logs
 
-#### Copy over any custom modules overtop of existing
-#if [ -d "/assets/modules" ]; then
-#    print_warn "Detected Custom Modules - Adding to application"
-#    cp -R /assets/modules/* "${NGINX_WEBROOT}"/Modules/
-#    chown -R "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"/Modules/
-#fi
-#
 custom_files "${CONTAINER_CUSTOM_PATH}" "${NGINX_WEBROOT}" "${NGINX_USER}" "${NGINX_GROUP}"
 custom_scripts
 
@@ -177,8 +165,6 @@ fi
 
 ### Cleanup
 cd "${NGINX_WEBROOT}"/
-#silent sudo -u "${NGINX_USER}" php artisan freescout:clear-cache
-silent sudo -u "${NGINX_USER}" php artisan optimize
 silent sudo -u "${NGINX_USER}" php artisan storage:link
 
 ### Check to see if DB is populated
@@ -188,13 +174,12 @@ if [ $? -gt 0 ]; then
     print_warn "Detected empty Database - Setting up - Please wait.."
     sleep 5
     silent sudo -u "${NGINX_USER}" php artisan migrate:fresh --force
-#    silent sudo -u "${NGINX_USER}" php artisan freescout:clear-cache
-#
+
     sanity_var ADMIN_EMAIL "Admin Email Address"
     sanity_var ADMIN_PASS "Admin Password"
-#
-#    ### Create User
-#    print_warn "Creating Administrative User"
+
+    ### Create User
+    print_warn "Creating Administrative User"
     cd "${NGINX_WEBROOT}"
     silent sudo -u "${NGINX_USER}" php artisan -n ninja:create-account --email="${ADMIN_EMAIL}" --password="${ADMIN_PASS}"
 fi
