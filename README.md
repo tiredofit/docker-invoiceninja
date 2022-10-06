@@ -10,9 +10,10 @@
 * * *
 ## About
 
-This will build a Docker Image for [invoiceninja](https://invoiceninja.net/) - An invoicing tool
+This will build a Docker Image for [Invoice Ninja](https://invoiceninja.org/) - An invoicing tool
 
 * Automatically installs and sets up installation upon first start
+
 
 ## Maintainer
 
