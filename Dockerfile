@@ -26,10 +26,14 @@ RUN source /assets/functions/00-container && \
     set -x && \
     apk update && \
     apk upgrade && \
+    apk add -t .invoiceninja-build-deps \
+              git \
+              nodejs \
+              npm \
+              && \
     apk add -t .invoiceninja-run-deps \
               chromium \
               font-isas-misc \
-              git \
               gnu-libiconv \
               sed \
               ttf-freefont \
@@ -37,13 +41,18 @@ RUN source /assets/functions/00-container && \
     \
     php-ext enable core && \
     clone_git_repo ${INVOICENINJA_REPO_URL} ${INVOICENINJA_VERSION} /assets/install && \
+    npm install --production && \
+    npm run production && \
     composer install --no-dev --quiet && \
     chown -R ${NGINX_USER}:${NGINX_GROUP} /assets/install && \
     rm -rf \
         /assets/install/.env.example \
         /assets/install/.env.travis \
+        /assets/install/docs \
+        /assets/install/tests \
         && \
     rm -rf /root/.composer && \
+    apk del .invoiceninja-build-deps && \
     rm -rf /var/tmp/* /var/cache/apk/*
 
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
