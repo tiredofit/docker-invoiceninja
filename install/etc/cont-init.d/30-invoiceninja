@@ -164,7 +164,7 @@ else
     echo "LOG=single" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "APP_LOCALE=${LANGUAGE}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "MAIL_MAILER=log" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-
+    echo "SNAPPDF_EXECUTABLE_PATH=${SNAPPDF_EXECUTIBLE_PATH}" silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     # Generate Key
     cd "${NGINX_WEBROOT}"/
     chown -R "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"/config
@@ -200,38 +200,10 @@ if [ $? -gt 0 ]; then
 fi
 
 cd "${NGINX_WEBROOT}"
-#chown -R "${NGINX_USER}":"${NGINX_GROUP}" storage bootstrap/cache public/css/builds public/js/builds
-#chmod -R ug+rwx storage bootstrap/cache public/css/builds public/js/builds
-#chown -R "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"
-#chmod ug+rwx "${NGINX_WEBROOT}"
-#
-#### Install symlinks for modules that may have been previously installed
-#if [ "$(ls -A /www/html/Modules)" ]; then
-#    print_warn "Installing Modules into container"
-#  silent /usr/bin/expect<<EOD
-#spawn sudo -u "${NGINX_USER}" php artisan freescout:module-install --no-ansi
-#set timeout 30
-#expect \
-#{
-#  (yes/no) {exp_send yes\r;exp_continue}
-#  eof {}
-##  timeout {puts "Putting you in control - to exit type \\ twice";interact \\\\}
-#}
-#EOD
-#fi
-#
-#print_warn "Running any Database Migrations"
-#cd "${NGINX_WEBROOT}"
-#silent /usr/bin/expect <<EOD
-#spawn sudo -u "${NGINX_USER}" php artisan migrate --no-ansi
-#set timeout 30
-#expect \
-#{
-#  (yes/no) {exp_send yes\r;exp_continue}
-#  eof {}
-##  timeout {puts "Putting you in control - to exit type \\ twice";interact \\\\}
-#}
-#EOD
+chown -R "${NGINX_USER}":"${NGINX_GROUP}" storage bootstrap/cache public/css public/js
+chmod -R ug+rwx storage bootstrap/cache public/css public/js
+chown -R "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"
+chmod ug+rwx "${NGINX_WEBROOT}"
 
 if [ ! -f "/tmp/.container/container-restart" ] ; then
     ### Add alias for running artisan
@@ -246,14 +218,16 @@ EOF
 fi
 
 cd "${NGINX_WEBROOT}"
-#silent sudo -u "${NGINX_USER}" php artisan config:clear
+silent sudo -u "${NGINX_USER}" php artisan view:clear
+silent sudo -u "${NGINX_USER}" php artisan view:cache
+silent sudo -u "${NGINX_USER}" php artisan optimize
 
-#cat <<EOF > "${CONTAINER_SCHEDULING_LOCATION}"/invoiceninja-schedule
+cat <<EOF > "${CONTAINER_SCHEDULING_LOCATION}"/invoiceninja-schedule
 # Hardcoded in image in /etc/cont-init.d/$(basename "$0")
 # Generated on $(TZ=${TIMEZONE} date +'%Y-%m-%d %H:%M:%S %Z')
-#
-#* * * * * sudo -u ${NGINX_USER} TZ=${TIMEZONE} LD_PRELOAD=/usr/lib/preloadable_libiconv.so php ${NGINX_WEBROOT}/artisan schedule:run >> /dev/null 2>&1
-#EOF
+
+* * * * * sudo -u ${NGINX_USER} TZ=${TIMEZONE} LD_PRELOAD=/usr/lib/preloadable_libiconv.so php ${NGINX_WEBROOT}/artisan schedule:run >> /dev/null 2>&1
+EOF
 
 print_info "Initialization Complete. Please visit ${SITE_URL} and login with your credentials.."
 
