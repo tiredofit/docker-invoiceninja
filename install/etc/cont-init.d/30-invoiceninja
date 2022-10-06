@@ -63,8 +63,8 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         db_ready mariadb
 
         print_info "Auto Configuring based on Environment Variables"
-        sed -i --follow-symlinks "s|APP_NAME=.*|APP_NAME=${APP_NAME}|g" "${NGINX_WEBROOT}"/.env
-        sed -i --follow-symlinks "s|APP_ENV=.*|APP_ENV=${APP_NAME}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|APP_NAME=.*|APP_NAME='${APP_NAME}'|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|APP_ENV=.*|APP_ENV=${APP_ENV}|g" "${NGINX_WEBROOT}"/.env
         if [ -z "${SITE_URL}" ]; then
             if [ -n "${APP_URL}" ]; then
                 sed -i --follow-symlinks "s|APP_URL=.*|APP_URL=${APP_URL}|g" "${NGINX_WEBROOT}"/.env
@@ -95,14 +95,14 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         sed -i --follow-symlinks "s|MAIL_USERNAME=.*|MAIL_USERNAME=${SMTP_USER}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|MAIL_PASSWORD=.*|MAIL_PASSWORD=${SMTP_PASS}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|MAIL_FROM_ADDRESS=.*|MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}|g" "${NGINX_WEBROOT}"/.env
-        sed -i --follow-symlinks "s|MAIL_FROM_NAME=.*|MAIL_FROM_NAME=${MAIL_FROM_NAME}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|MAIL_FROM_NAME=.*|MAIL_FROM_NAME='${MAIL_FROM_NAME}'|g" "${NGINX_WEBROOT}"/.env
         if [ -n "${API_SECRET}" ]; then
             sed -i "/.*API_SECRET=.*/c\API_SECRET=${API_SECRET}" "${NGINX_WEBROOT}"/.env
         else
             sed -i "/.*API_SECRET=.*/c\#API_SECRET=" "${NGINX_WEBROOT}"/.env
         fi
-        sed -i --follow-symlinks "s|REMEMBER_ME_ENABLED=.*|REMEMBER_ME_ENABLED=${SESSION_REMEMBER}|g" "${NGINX_WEBROOT}"/.env
-        sed -i --follow-symlinks "s|SESSION_EXPIRE_ON_CLOSE=.*|SESSION_EXPIRE_ON_CLOSE=${SESSION_EXPIRE_ON_CLOSE}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|REMEMBER_ME_ENABLED=.*|REMEMBER_ME_ENABLED=${SESSION_REMEMBER,,}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|SESSION_EXPIRE_ON_CLOSE=.*|SESSION_EXPIRE_ON_CLOSE=${SESSION_EXPIRE_ON_CLOSE,,}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|AUTO_LOGOUT_SECONDS=.*|AUTO_LOGOUT_SECONDS=${SESSION_LOGOUT_SECONDS}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|SESSION_DRIVER=.*|SESSION_DRIVER=${SESSION_DRIVER}|g" "${NGINX_WEBROOT}"/.env
         if [ -n "${SESSION_SECURE}" ]; then
@@ -233,7 +233,7 @@ else
     fi
     echo "TRUSTED_PROXIES=*" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    echo "MAIL_DRIVER='${MAIL_TYPE}'" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "MAIL_DRIVER=${MAIL_TYPE}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "MAIL_HOST=${SMTP_HOST}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "MAIL_PORT=${SMTP_PORT}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "MAIL_ENCRYPTION=${SMTP_ENCRYPTION}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
@@ -249,7 +249,7 @@ else
     fi
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "REMEMBER_ME_ENABLED=${SESSION_REMEMBER,,}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    echo "SESSION_EXPIRE_ON_CLOSE=${SESSION_EXPIRE_ON_CLOSE}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "SESSION_EXPIRE_ON_CLOSE=${SESSION_EXPIRE_ON_CLOSE,,}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "AUTO_LOGOUT_SECONDS=${SESSION_LOGOUT_SECONDS}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "SESSION_DRIVER=${SESSION_DRIVER}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
@@ -336,7 +336,7 @@ else
         echo "#S3_REGION=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     fi
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    echo "SNAPPDF_EXECUTABLE_PATH=${SNAPPDF_EXECUTIBLE_PATH}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "SNAPPDF_EXECUTABLE_PATH=${SNAPPDF_EXECUTABLE_PATH}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
 
     # Generate Key
     cd "${NGINX_WEBROOT}"/
@@ -353,12 +353,13 @@ cd "${NGINX_WEBROOT}"/
 silent sudo -u "${NGINX_USER}" php artisan storage:link
 
 ### Check to see if DB is populated
-mysql -u "${DB_USER}" -p"${DB_PASS}" -h"${DB_HOST}" -P$DB_PORT -e "use "${DB_NAME}"; SELECT * FROM users;" > /dev/null 2>&1
+mysql -u ${DB_USER} -p${DB_PASS} -h${DB_HOST} -P$DB_PORT -e "use "$DB_NAME"; SELECT * FROM users;" > /dev/null 2>&1
 if [ $? -gt 0 ]; then
     ### Perform Database Installtion Routines
     print_warn "Detected empty Database - Setting up - Please wait.."
     sleep 5
     silent sudo -u "${NGINX_USER}" php artisan migrate:fresh --force
+    silent sudo -u "${NGINX_USER}" php artisan db:seed --force
 
     sanity_var ADMIN_EMAIL "Admin Email Address"
     sanity_var ADMIN_PASS "Admin Password"
