@@ -53,7 +53,8 @@ RUN source /assets/functions/00-container && \
         && \
     rm -rf /root/.composer && \
     apk del .invoiceninja-build-deps && \
-    rm -rf /var/tmp/* /var/cache/apk/*
+    rm -rf /var/tmp/* /var/cache/apk/* && \
+    rm -rf /root/.npm /root/.cache
 
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
