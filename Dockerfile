@@ -25,14 +25,17 @@ RUN source /assets/functions/00-container && \
     apk update && \
     apk upgrade && \
     apk add -t .invoiceninja-run-deps \
+              chromium \
+              font-isas-misc \
               git \
               gnu-libiconv \
               sed \
+              ttf-freefont \
               && \
     \
     php-ext enable core && \
     clone_git_repo ${INVOICENINJA_REPO_URL} ${INVOICENINJA_VERSION} /assets/install && \
-    composer install && \
+    composer install --no-dev --quiet && \
     chown -R ${NGINX_USER}:${NGINX_GROUP} /assets/install && \
     rm -rf \
         /assets/install/.env.example \
