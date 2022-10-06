@@ -337,7 +337,7 @@ else
         echo "#S3_REGION=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     fi
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-
+    echo "EXPANDED_LOGGING=true" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     # Generate Key
     cd "${NGINX_WEBROOT}"/
     chown -R "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"/config
