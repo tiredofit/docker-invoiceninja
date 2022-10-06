@@ -336,7 +336,6 @@ else
         echo "#S3_REGION=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     fi
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    echo "SNAPPDF_EXECUTABLE_PATH=${SNAPPDF_EXECUTABLE_PATH}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
 
     # Generate Key
     cd "${NGINX_WEBROOT}"/
