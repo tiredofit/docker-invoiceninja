@@ -10,7 +10,7 @@
 * * *
 ## About
 
-This will build a Docker Image for [invoiceninja](https://invoiceninja.net/) - An open source Helpscout / Zendesk alternative.
+This will build a Docker Image for [invoiceninja](https://invoiceninja.net/) - An invoicing tool
 
 * Automatically installs and sets up installation upon first start
 
@@ -88,10 +88,9 @@ The following directories are used for configuration and can be mapped for persi
 
 | Directory                | Description                                                                                                              |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| `/www/logs`              | Nginx and PHP Log files                                                                                                  |
+| `/www/logs`              | Invoice Ninja, Nginx and PHP Log files                                                                                   |
 | `/assets/custom`         | (Optional) Copy source code over existing source code in /www/html upon container start. Use exact file/folder structure |
 | `/assets/custom-scripts` | (Optional) If you want to execute custom scripting, place scripts here with extension `.sh`                              |
-| `/assets/modules`        | (Optional) If you want to add additional modules outside of the source tree, add them here                               |
 | `/www/html`              | (Optional) If you want to expose the invoiceninja sourcecode and enable Self Updating, expose this volume                |
 | *OR*                     |                                                                                                                          |
 | `/data`                  | Hold onto your persistent sessions and cache between container restarts                                                  |
@@ -111,24 +110,37 @@ Be sure to view the following repositories to understand all the customizable op
 | [PHP-FPM](https://github.com/tiredofit/docker-nginx-php-fpm/) | PHP Interpreter                        |
 
 
-| Parameter            | Description                                                                                     | default     |
-| -------------------- | ----------------------------------------------------------------------------------------------- | ----------- |
-| `ADMIN_EMAIL`        | Administrator Email Address - Needed for logging in                                             |             |
-| `ADMIN_FIRST_NAME`   | Admin user First Name                                                                           | `Admin`     |
-| `ADMIN_LAST_NAME`    | Admin user First Name                                                                           | `User`      |
-| `ADMIN_PASS`         | Administrator Password - Needed for Logging in                                                  |             |
-| `APPLICATION_NAME`   | Change default application name - Default `invoiceninja`                                           | `invoiceninja` |
-| `APP_PROXY`          | Allow Application to use a proxy for fetching modules                                           |             |
-| `DB_HOST`            | Host or container name of MariaDB Server e.g. `invoiceninja-db`                                    |             |
-| `DB_PORT`            | MariaDB Port                                                                                    | `3306`      |
-| `DB_NAME`            | MariaDB Database name e.g. `invoiceninja`                                                          |             |
-| `DB_USER`            | MariaDB Username for above Database e.g. `invoiceninja`                                            |             |
-| `DB_PASS`            | MariaDB Password for above Database e.g. `password`                                             |             |
-| `DISPLAY_ERRORS`     | Display Errors on Website                                                                       | `FALSE`     |
-| `ENABLE_AUTO_UPDATE` | If coming from an earlier version of image, automatically update it to latest invoiceninja release | `TRUE`      |
-| `ENABLE_SSL_PROXY`   | If using SSL reverse proxy force application to return https URLs `TRUE` or `FALSE`             |             |
-| `SETUP_TYPE`         | Automatically edit configuration after first bootup `AUTO` or `MANUAL`                          | `AUTO`      |
-| `SITE_URL`           | The url your site listens on example `https://invoiceninja.example.com`                            |             |
+| Parameter                 | Description                                                                                        | default               |
+| ------------------------- | -------------------------------------------------------------------------------------------------- | --------------------- |
+| `ADMIN_EMAIL`             | Administrator Email Address - Needed for logging in first boot                                     |                       |
+| `ADMIN_PASS`              | Administrator Password - Needed for Logging in                                                     |                       |
+| `APP_NAME`                | Change default application name - Default                                                          | `Invoice Ninja`       |
+| `APP_PROXY`               | Allow Application to use a proxy for fetching modules                                              |                       |
+| `DB_HOST`                 | Host or container name of MariaDB Server e.g. `invoiceninja-db`                                    |                       |
+| `DB_PORT`                 | MariaDB Port                                                                                       | `3306`                |
+| `DB_NAME`                 | MariaDB Database name e.g. `invoiceninja`                                                          |                       |
+| `DB_USER`                 | MariaDB Username for above Database e.g. `invoiceninja`                                            |                       |
+| `DB_PASS`                 | MariaDB Password for above Database e.g. `password`                                                |                       |
+| `DISPLAY_ERRORS`          | Display Errors on Website                                                                          | `FALSE`               |
+| `ENABLE_AUTO_UPDATE`      | If coming from an earlier version of image, automatically update it to latest invoiceninja release | `TRUE`                |
+| `ENABLE_SSL_PROXY`        | If using SSL reverse proxy force application to return https URLs `TRUE` or `FALSE`                |                       |
+| `SETUP_TYPE`              | Automatically edit configuration after first bootup `AUTO` or `MANUAL`                             | `AUTO`                |
+| `SITE_URL`                | The url your site listens on example `https://invoiceninja.example.com`                            |                       |
+| `LANGUAGE`                | What locale/language                                                                               | `en`                  |
+| `FILESYSTEM_DRIVER`       | Filesystem Driver                                                                                  | `local`               |
+| `ENABLE_GOOGLE_MAPS`      | Enable Google Maps                                                                                 | `TRUE`                |
+| `MAIL_TYPE`               | Mail Type                                                                                          | `smtp`                |
+| `SESSION_REMEMBER`        | Remember users session                                                                             | `TRUE`                |
+| `SESSION_LOGOUT_SECONDS`  | Auto logout users after amount of seconds                                                          | `28800`               |
+| `SESSION_EXPIRE_ON_CLOSE` | Expire session on browser close                                                                    | `FALSE`               |
+| `MAIL_FROM_NAME`          | Mail from Name                                                                                     | `Invoice Ninja`       |
+| `MAIL_FROM_ADDRESS`       | Mail from Address                                                                                  | `noreply@example.com` |
+| `SMTP_HOST`               | SMTP Server to be used to send messages from Postal Management System to users                     | `postfix-relay`       |
+| `SMTP_PORT`               | SMTP Port to be used to send messages from Postal Management System to Users                       | `25`                  |
+| `SMTP_USER`               | Username to authenticate to SMTP Server                                                            | `null`                |
+| `SMTP_PASS`               | Password to authenticate to SMTP Server                                                            | `null`                |
+| `SMTP_ENCRYPTION`         | Type of encryption for SMTP `none` `tls`                                                           | `none`                |
+| `QUEUE_CONNECTION`        | Queue Connection                                                                                   | `database`            |
 
 
 ### Networking
