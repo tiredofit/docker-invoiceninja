@@ -5,6 +5,7 @@ ENV INVOICENINJA_VERSION=v5.5.27 \
     INVOICENINJA_REPO_URL=https://github.com/invoiceninja/invoiceninja \
     NGINX_WEBROOT=/www/html \
     NGINX_SITE_ENABLED=invoiceninja \
+    SNAPPDF_EXECUTABLE_PATH=/usr/bin/chromium-browser \
     PHP_CREATE_SAMPLE_PHP=FALSE \
     PHP_ENABLE_CURL=TRUE \
     PHP_ENABLE_FILEINFO=TRUE \
