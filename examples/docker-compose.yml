@@ -1,0 +1,81 @@
+version: '2'
+
+services:
+  
+  invoiceninja-app:
+    image: tiredofit/invoiceninja
+    container_name: invoiceninja-app
+    links:
+      - invoiceninja-db
+    volumes:
+      ### If you want to perform customizations to the source and have access to it, then uncomment this line - This includes modules
+      #- ./data:/www/html
+      ### Or, if you just want to use Stock invoiceninja and hold onto persistent files like cache and session use this, one or the other.
+      - ./data:/data
+      ### If you want to just keep the original source and add additional modules uncomment this line
+      - ./logs/:/www/logs
+    environment:
+      - CONTAINER_NAME=invoiceninja-app
+      - TIMEZONE=America/Vancouver
+      
+      - DB_HOST=invoiceninja-db
+      - DB_NAME=invoiceninja
+      - DB_USER=invoiceninja
+      - DB_PASS=invoiceninja
+
+      - SITE_URL=https://invoiceninja.example.com
+
+      - ADMIN_EMAIL=admin@admin.com
+      - ADMIN_PASS=invoiceninja
+
+      - ENABLE_SSL_PROXY=TRUE
+      - DISPLAY_ERRORS=FALSE
+    networks:
+      - proxy
+      - services
+    restart: always
+
+  invoiceninja-db:
+    image: tiredofit/mariadb:10.8-latest
+    container_name: invoiceninja-db
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      - CONTAINER_NAME=invoiceninja-db
+      - TIMEZONE=America/Vancouver
+
+      - ROOT_PASS=password
+      - DB_NAME=invoiceninja
+      - DB_USER=invoiceninja
+      - DB_PASS=invoiceninja
+
+    networks:
+      - services
+    restart: always
+
+  invoiceninja-db-backup:
+    container_name: invoiceninja-db-backup
+    image: tiredofit/db-backup:latst
+    links:
+     - invoiceninja-db
+    volumes:
+      - ./dbbackup:/backup
+    environment:
+      - CONTAINER_NAME=invoiceninja-db-backup
+      - DB_HOST=invoiceninja-db
+      - DB_TYPE=mariadb
+      - DB_NAME=invoiceninja
+      - DB_USER=invoiceninja
+      - DB_PASS=invoiceninja
+      - DB_DUMP_FREQ=1440
+      - DB_DUMP_BEGIN=0000
+      - DB_CLEANUP_TIME=8640
+    networks:
+      - services
+    restart: always
+
+networks:
+  proxy:
+    external: true
+  services:
+    external: true
