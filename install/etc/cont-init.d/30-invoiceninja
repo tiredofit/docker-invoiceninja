@@ -39,7 +39,8 @@ else
             cp -R /assets/install/* "${NGINX_WEBROOT}"
             chown -R "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"
             cd "${NGINX_WEBROOT}"|| exit
-            silent sudo -u "${NGINX_USER}" php artisan nina:post-update
+            silent sudo -u "${NGINX_USER}" php artisan ninka:post-update
+            silent sudo -u "${NGINX_USER}" php artisan migrate --force
             sed -i --follow-symlinks "1 i\
             ${INVOICENINJA_VERSION} upgraded on$(TZ=${TIMEZONE} date +'%Y-%m-%d %H:%M:%S %Z')" /www/html/.invoiceninja-version
         fi
@@ -390,6 +391,7 @@ fi
 cd "${NGINX_WEBROOT}"
 silent sudo -u "${NGINX_USER}" php artisan view:clear
 silent sudo -u "${NGINX_USER}" php artisan view:cache
+silent sudo -u "${NGINX_USER}" php artisan config:cache
 silent sudo -u "${NGINX_USER}" php artisan optimize
 
 cat <<EOF > "${CONTAINER_SCHEDULING_LOCATION}"/invoiceninja-schedule
