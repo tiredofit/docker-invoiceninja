@@ -7,7 +7,7 @@ PROCESS_NAME="invoiceninja"
 check_service_initialized init 20-php-fpm
 
 ### Check if New Install
-if [ ! -f "${NGINX_WEBROOT}"/server.php ]; then
+if [ ! -f "${NGINX_WEBROOT}"/public/index.php ]; then
     print_warn "Potential New Installation / Standalone Installation Detected - Copying Invoice Ninja Sourcecode"
     cp -R /assets/install/* "${NGINX_WEBROOT}"
 
