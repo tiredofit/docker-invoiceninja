@@ -29,7 +29,7 @@ if [ ! -f "${NGINX_WEBROOT}"/public/index.php ]; then
 
     ### Auto Upgrade functionality
     if [ ! -f "${NGINX_WEBROOT}/.invoiceninja-version" ]; then
-        echo "${INVOICENINJFA_VERSION} first installed on $(date)" >> "${NGINX_WEBROOT}"/.invoiceninja-version
+        echo "${INVOICENINJFA_VERSION} first installed on $(TZ=${TIMEZONE} date +'%Y-%m-%d %H:%M:%S %Z')" >> "${NGINX_WEBROOT}"/.invoiceninja-version
     fi
     chown -R "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"
 else
@@ -41,7 +41,7 @@ else
             cd "${NGINX_WEBROOT}"|| exit
             silent sudo -u "${NGINX_USER}" php artisan nina:post-update
             sed -i --follow-symlinks "1 i\
-            ${INVOICENINJA_VERSION} upgraded on $(date)" /www/html/.invoiceninja-version
+            ${INVOICENINJA_VERSION} upgraded on$(TZ=${TIMEZONE} date +'%Y-%m-%d %H:%M:%S %Z')" /www/html/.invoiceninja-version
         fi
     fi
 fi
