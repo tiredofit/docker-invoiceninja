@@ -56,40 +56,132 @@ custom_files "${CONTAINER_CUSTOM_PATH}" "${NGINX_WEBROOT}" "${NGINX_USER}" "${NG
 custom_scripts
 
 #### Dynamically Create Configuration
-if grep -q "APP_URL" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
+if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
     if [ "${SETUP_TYPE,,}" = "auto" ]; then
         sanity_db
         sanity_var SITE_URL "Site URL"
         db_ready mariadb
 
         print_info "Auto Configuring based on Environment Variables"
-        # Proxy and Host Settings
+        sed -i --follow-symlinks "s|APP_NAME=.*|APP_NAME=${APP_NAME}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|APP_ENV=.*|APP_ENV=${APP_NAME}|g" "${NGINX_WEBROOT}"/.env
         if [ -z "${SITE_URL}" ]; then
             if [ -n "${APP_URL}" ]; then
-                sed -i --follow-symlinks "s#APP_URL=.*#APP_URL=${APP_URL}#g" "${NGINX_WEBROOT}"/.env
+                sed -i --follow-symlinks "s|APP_URL=.*|APP_URL=${APP_URL}|g" "${NGINX_WEBROOT}"/.env
             fi
         else
-            sed -i --follow-symlinks "s#APP_URL=.*#APP_URL=${SITE_URL}#g" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "s|APP_URL=.*|APP_URL=${SITE_URL}|g" "${NGINX_WEBROOT}"/.env
         fi
-
-        if var_true "${ENABLE_SSL_PROXY}" || var_true "${APP_FORCE_HTTPS}" || var_true "${REQUIRE_HTTPS}" ; then
-            sed -i --follow-symlinks "s#REQUIRE_HTTPS=.*#REQUIRE_HTTPS=true#g" "${NGINX_WEBROOT}"/.env
-        else
-            sed -i --follow-symlinks "s#REQUIRE_HTTPS=.*#REQUIRE_HTTPS=false#g" "${NGINX_WEBROOT}"/.env
-        fi
-
         if var_true "${APP_DEBUG}" || var_true "${DISPLAY_ERRORS}" ; then
-            sed -i --follow-symlinks "s#APP_DEBUG=.*#APP_DEBUG=true#g" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "s|APP_DEBUG=.*|APP_DEBUG=true|g" "${NGINX_WEBROOT}"/.env
         else
-            sed -i --follow-symlinks "s#APP_DEBUG=.*#APP_DEBUG=false#g" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "s|APP_DEBUG=.*|APP_DEBUG=false|g" "${NGINX_WEBROOT}"/.env
+        fi
+        sed -i --follow-symlinks "s|APP_LOCALE=.*|APP_LOCALE=${APP_LANGUAGE}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|DB_HOST=.*|DB_HOST=${DB_HOST}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|DB_PORT=.*|DB_PORT=${DB_PORT}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|DB_DATABASE=.*|DB_DATABASE=${DB_NAME}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|DB_USERNAME=.*|DB_USERNAME=${DB_USER}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|DB_PASSWORD=.*|DB_PASSWORD=${DB_PASS}|g" "${NGINX_WEBROOT}"/.env
+        if var_true "${ENABLE_SSL_PROXY}" || var_true "${APP_FORCE_HTTPS}" || var_true "${REQUIRE_HTTPS}" ; then
+            sed -i --follow-symlinks "s|REQUIRE_HTTPS=.*|REQUIRE_HTTPS=true|g" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i --follow-symlinks "s|REQUIRE_HTTPS=.*|REQUIRE_HTTPS=false|g" "${NGINX_WEBROOT}"/.env
+        fi
+        sed -i --follow-symlinks "s|MAIL_DRIVER=.*|MAIL_DRIVER=${MAIL_TYPE}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|MAIL_HOST=.*|MAIL_HOST=${SMTP_HOST}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|MAIL_PORT=.*|MAIL_PORT=${SMTP_PORT}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|MAIL_ENCRYPTION=.*|MAIL_ENCRYPTION=${SMTP_ENCRYPTION}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|MAIL_USERNAME=.*|MAIL_USERNAME=${SMTP_USER}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|MAIL_PASSWORD=.*|MAIL_PASSWORD=${SMTP_PASS}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|MAIL_FROM_ADDRESS=.*|MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|MAIL_FROM_NAME=.*|MAIL_FROM_NAME=${MAIL_FROM_NAME}|g" "${NGINX_WEBROOT}"/.env
+        if [ -n "${API_SECRET}" ]; then
+            sed -i "/.*API_SECRET=.*/c\API_SECRET=${API_SECRET}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*API_SECRET=.*/c\#API_SECRET=" "${NGINX_WEBROOT}"/.env
+        fi
+        sed -i --follow-symlinks "s|REMEMBER_ME_ENABLED=.*|REMEMBER_ME_ENABLED=${SESSION_REMEMBER}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|SESSION_EXPIRE_ON_CLOSE=.*|SESSION_EXPIRE_ON_CLOSE=${SESSION_EXPIRE_ON_CLOSE}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|AUTO_LOGOUT_SECONDS=.*|AUTO_LOGOUT_SECONDS=${SESSION_LOGOUT_SECONDS}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|SESSION_DRIVER=.*|SESSION_DRIVER=${SESSION_DRIVER}|g" "${NGINX_WEBROOT}"/.env
+        if [ -n "${SESSION_SECURE}" ]; then
+            sed -i "/.*SESSION_SECURE=.*/c\SESSION_SECURE=${SESSION_SECURE}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*SESSION_SECURE=.*/c\#SESSION_SECURE=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${SESSION_ENCRYPT}" ]; then
+            sed -i "/.*SESSION_ENCRYPT=.*/c\SESSION_ENCRYPT=${SESSION_ENCRYPT}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*SESSION_ENCRYPT=.*/c\#SESSION_ENCRYPT=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${SESSION_SECURE}" ]; then
+            sed -i "/.*SESSION_SECURE=.*/c\SESSION_SECURE=${SESSION_SECURE}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*SESSION_SECURE=.*/c\#SESSION_SECURE=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${CACHE_DRIVER}" ]; then
+            sed -i "/.*CACHE_DRIVER=.*/c\CACHE_DRIVER=${CACHE_DRIVER}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*CACHE_DRIVER=.*/c\#CACHE_DRIVER=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${CACHE_HOST}" ]; then
+            sed -i "/.*CACHE_HOST=.*/c\CACHE_HOST=${CACHE_HOST}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*CACHE_HOST=.*/c\#CACHE_HOST=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${REDIS_HOST}" ]; then
+            sed -i "/.*REDIS_HOST=.*/c\REDIS_HOST=${REDIS_HOST}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*REDIS_HOST=.*/c\#REDIS_HOST=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${CACHE_PORT1}" ]; then
+            sed -i "/.*CACHE_PORT1=.*/c\CACHE_PORT1=${CACHE_PORT1}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*CACHE_PORT1=.*/c\#CACHE_PORT1=" "${NGINX_WEBROOT}"/.env
         fi
 
-        sed -i --follow-symlinks "s#DB_HOST=.*#DB_HOST=${DB_HOST}#g" "${NGINX_WEBROOT}"/.env
-        sed -i --follow-symlinks "s#DB_PORT=.*#DB_PORT=${DB_PORT}#g" "${NGINX_WEBROOT}"/.env
-        sed -i --follow-symlinks "s#DB_DATABASE=.*#DB_DATABASE=${DB_NAME}#g" "${NGINX_WEBROOT}"/.env
-        sed -i --follow-symlinks "s#DB_USERNAME=.*#DB_USERNAME=${DB_USER}#g" "${NGINX_WEBROOT}"/.env
-        sed -i --follow-symlinks "s#DB_PASSWORD=.*#DB_PASSWORD=${DB_PASS}#g" "${NGINX_WEBROOT}"/.env
-#
+        if [ -n "${CACHE_PORT2}" ]; then
+            sed -i "/.*CACHE_PORT2=.*/c\CACHE_PORT2=${CACHE_PORT2}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*CACHE_PORT2=.*/c\#CACHE_PORT2=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${AUTHENTICATION_GOOGLE_ID}" ]; then
+            sed -i "/.*GOOGLE_CLIENT_ID=.*/c\GOOGLE_CLIENT_ID=${AUTHENTICATION_GOOGLE_ID}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*GOOGLE_CLIENT_ID=.*/c\#GOOGLE_CLIENT_ID=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${AUTHENTICATION_GOOGLE_SECRET}" ]; then
+            sed -i "/.*GOOGLE_CLIENT_SECRET=.*/c\GOOGLE_CLIENT_SECRET=${AUTHENTICATION_GOOGLE_SECRET}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*GOOGLE_CLIENT_SECRET=.*/c\#GOOGLE_CLIENT_SECRET=" "${NGINX_WEBROOT}"/.env
+        fi
+        sed -i --follow-symlinks "s|GOOGLE_MAPS_ENABLED=.*|GOOGLE_MAPS_ENABLED=${ENABLE_GOOGLE_MAPS,,}|g" "${NGINX_WEBROOT}"/.env
+        if [ -n "${GOOGLE_MAPS_API_KEY}" ]; then
+            sed -i "/.*GOOGLE_MAPS_API_KEY=.*/c\GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*GOOGLE_MAPS_API_KEY=.*/c\#GOOGLE_MAPS_API_KEY=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${S3_KEY}" ]; then
+            sed -i "/.*S3_KEY=.*/c\S3_KEY=${S3_KEY}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*S3_KEY=.*/c\#S3_KEY=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${S3_REGION}" ]; then
+            sed -i "/.*S3_REGION=.*/c\S3_REGION=${S3_REGION}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*S3_REGION=.*/c\#S3_REGION=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${S3_SECRET}" ]; then
+            sed -i "/.*S3_SECRET=.*/c\S3_SECRET=${S3_SECRET}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*S3_SECRET=.*/c\#S3_SECRET=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${S3_BUCKET}" ]; then
+            sed -i "/.*S3_BUCKET=.*/c\S3_BUCKET=${S3_BUCKET}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*S3_BUCKET=.*/c\#S3_BUCKET=" "${NGINX_WEBROOT}"/.env
+        fi
     else
         print_info "Skipping Auto configuration and using in place .env"
     fi
@@ -103,11 +195,13 @@ else
     sanity_var SITE_URL "Site URL"
     db_ready mariadb
 
-    print_info "Generating Configuration"
+    print_info "Generating Configuration for the first time"
     touch "${NGINX_WEBROOT}"/.env
     chown "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"/.env
-    echo "#### Automatically Generated File - Upon container restart any settings will reset!" | silent sudo -u "${NGINX_USER}" tee "${NGINX_WEBROOT}"/.env
-    # Proxy and HostSettings
+    echo "#### Automatically Generated File" | silent sudo -u "${NGINX_USER}" tee "${NGINX_WEBROOT}"/.env
+    echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "APP_NAME='${APP_NAME}'" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "APP_ENV=${APP_ENV}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     if [ -z "${SITE_URL}" ]; then
         if [ -n "${APP_URL}" ]; then
             echo "APP_URL=$APP_URL" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
@@ -115,42 +209,135 @@ else
     else
         echo "APP_URL=$SITE_URL" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     fi
-
-    if var_true "${ENABLE_SSL_PROXY}" || var_true "${APP_FORCE_HTTPS}" || var_true "${REQUIRE_HTTPS}" ; then
-        echo "REQUIRE_HTTPS=true" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-#        echo "SESSION_SECURE_COOKIE=true" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    else
-        echo "REQUIRE_HTTPS=false" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-#        echo "SESSION_SECURE_COOKIE=false" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    fi
-#
-#    if [ -n "${APP_PROXY}" ] ; then
-#        echo "APP_PROXY=${APP_PROXY}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-#    fi
-#
     if var_true "${APP_DEBUG}" || var_true "${DISPLAY_ERRORS}" ; then
         echo "APP_DEBUG=true" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     else
         echo "APP_DEBUG=false" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     fi
-
     echo "APP_KEY=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-#
-    # Set DB Settings
+    echo "APP_CIPHER=${APP_CIPHER}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "APP_LOCALE=${LANGUAGE}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "NINJA_ENVIRONMENT=selfhost" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "DB_CONNECTION=mysql" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "DB_HOST=$DB_HOST" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "DB_PORT=$DB_PORT" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "DB_DATABASE=$DB_NAME" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "DB_USERNAME=$DB_USER" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "DB_PASSWORD=$DB_PASS" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-
+    echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    if var_true "${ENABLE_SSL_PROXY}" || var_true "${APP_FORCE_HTTPS}" || var_true "${REQUIRE_HTTPS}" ; then
+        echo "REQUIRE_HTTPS=true" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "REQUIRE_HTTPS=false" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
     echo "TRUSTED_PROXIES=*" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    echo "NINJA_ENVIRONMENT=selfhost" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "MAIL_DRIVER='${MAIL_TYPE}'" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "MAIL_HOST=${SMTP_HOST}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "MAIL_PORT=${SMTP_PORT}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "MAIL_ENCRYPTION=${SMTP_ENCRYPTION}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "MAIL_USERNAME=${SMTP_USER}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "MAIL_PASSWORD=${SMTP_PASS}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "MAIL_FROM_ADDRESS='${MAIL_FROM_ADDRESS}'" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "MAIL_FROM_NAME='${MAIL_FROM_NAME}'" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    if [ -n "${API_SECRET}" ]; then
+        echo "API_SECRET=${API_SECRET}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#API_SECRET=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "REMEMBER_ME_ENABLED=${SESSION_REMEMBER,,}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "SESSION_EXPIRE_ON_CLOSE=${SESSION_EXPIRE_ON_CLOSE}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "AUTO_LOGOUT_SECONDS=${SESSION_LOGOUT_SECONDS}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "SESSION_DRIVER=${SESSION_DRIVER}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    if [ -n "${SESSION_ENCRYPT}" ]; then
+        echo "SESSION_ENCRYPT=${SESSION_ENCRYPT}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#SESSION_ENCRYPT=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
 
-    echo "LOG=single" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    echo "APP_LOCALE=${LANGUAGE}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    echo "MAIL_MAILER=log" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    echo "SNAPPDF_EXECUTABLE_PATH=${SNAPPDF_EXECUTIBLE_PATH}" silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    if [ -n "${SESSION_DOMAIN}" ]; then
+        echo "SESSION_DOMAIN=${SESSION_DOMAIN}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#SESSION_DOMAIN=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${SESSION_SECURE}" ]; then
+        echo "SESSION_SECURE=${SESSION_SECURE}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#SESSION_SECURE=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    if [ -n "${CACHE_DRIVER}" ]; then
+        echo "CACHE_DRIVER=${CACHE_DRIVER}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#CACHE_DRIVER=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${CACHE_HOST}" ]; then
+        echo "CACHE_HOST=${CACHE_HOST}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#CACHE_HOST=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${REDIS_HOST}" ]; then
+        echo "REDIS_HOST=${REDIS_HOST}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#REDIS_HOST=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${CACHE_PORT1}" ]; then
+        echo "CACHE_PORT1=${CACHE_PORT1}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#CACHE_PORT1=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${CACHE_PORT2}" ]; then
+        echo "CACHE_PORT2=${CACHE_PORT2}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#CACHE_PORT2=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    if [ -n "${GOOGLE_CLIENT_ID}" ]; then
+        echo "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#GOOGLE_CLIENT_ID=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${GOOGLE_CLIENT_SECRET}" ]; then
+        echo "GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#GOOGLE_CLIENT_SECRET=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    echo "GOOGLE_OAUTH_REDIRECT=${SITE_URL}/auth/google" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "GOOGLE_MAPS_ENABLED=${ENABLE_GOOGLE_MAPS,,}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    if [ -n "${GOOGLE_MAPS_API_KEY}" ]; then
+        echo "GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#GOOGLE_MAPS_API_KEY=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    if [ -n "${S3_BUCKET}" ]; then
+        echo "S3_BUCKET=${S3_BUCKET}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#S3_BUCKET=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${S3_KEY}" ]; then
+        echo "S3_KEY=${S3_KEY}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#S3_KEY=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${S3_BUCKET}" ]; then
+        echo "S3_BUCKET=${S3_BUCKET}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#S3_BUCKET=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${S3_REGION}" ]; then
+        echo "S3_REGION=${S3_REGION}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#S3_REGION=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "SNAPPDF_EXECUTABLE_PATH=${SNAPPDF_EXECUTIBLE_PATH}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+
     # Generate Key
     cd "${NGINX_WEBROOT}"/
     chown -R "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"/config
@@ -166,7 +353,7 @@ cd "${NGINX_WEBROOT}"/
 silent sudo -u "${NGINX_USER}" php artisan storage:link
 
 ### Check to see if DB is populated
-mysql -u $DB_USER -p$DB_PASS -h$DB_HOST -P$DB_PORT -e "use "$DB_NAME"; SELECT * FROM users;" > /dev/null 2>&1
+mysql -u "${DB_USER}" -p"${DB_PASS}" -h"${DB_HOST}" -P$DB_PORT -e "use "${DB_NAME}"; SELECT * FROM users;" > /dev/null 2>&1
 if [ $? -gt 0 ]; then
     ### Perform Database Installtion Routines
     print_warn "Detected empty Database - Setting up - Please wait.."
