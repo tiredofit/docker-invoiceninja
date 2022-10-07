@@ -115,6 +115,7 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         else
             sed -i "/.*API_SECRET=.*/c\#API_SECRET=" "${NGINX_WEBROOT}"/.env
         fi
+        sed -i --follow-symlinks "s|LOG_PDF_HTML=.*|LOG_PDF_HTML=${LOG_PDF_HTML,,}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|REMEMBER_ME_ENABLED=.*|REMEMBER_ME_ENABLED=${SESSION_REMEMBER,,}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|SESSION_EXPIRE_ON_CLOSE=.*|SESSION_EXPIRE_ON_CLOSE=${SESSION_EXPIRE_ON_CLOSE,,}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|AUTO_LOGOUT_SECONDS=.*|AUTO_LOGOUT_SECONDS=${SESSION_LOGOUT_SECONDS}|g" "${NGINX_WEBROOT}"/.env
@@ -176,25 +177,35 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         else
             sed -i "/.*GOOGLE_MAPS_API_KEY=.*/c\#GOOGLE_MAPS_API_KEY=" "${NGINX_WEBROOT}"/.env
         fi
-        if [ -n "${S3_KEY}" ]; then
-            sed -i "/.*S3_KEY=.*/c\S3_KEY=${S3_KEY}" "${NGINX_WEBROOT}"/.env
+        if [ -n "${S3_BUCKET}" ]; then
+            sed -i "/.*AWS_BUCKET=.*/c\AWS_BUCKET=${S3_BUCKET}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*S3_KEY=.*/c\#S3_KEY=" "${NGINX_WEBROOT}"/.env
+            sed -i "/.*AWS_BUCKET=.*/c\#AWS_BUCKET=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${S3_ENDPOINT}" ]; then
+            sed -i "/.*AWS_ENDPOINT=.*/c\AWS_ENDPOINT=${S3_ENDPOINT}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*AWS_ENDPOINT=.*/c\#AWS_ENDPOINT=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${S3_KEY}" ]; then
+            sed -i "/.*AWS_ACCESS_KEY_ID=.*/c\AWS_ACCESS_KEY_ID=${S3_KEY}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*AWS_ACCESS_KEY_ID=.*/c\#AWS_ACCESS_KEY_ID=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${S3_REGION}" ]; then
-            sed -i "/.*S3_REGION=.*/c\S3_REGION=${S3_REGION}" "${NGINX_WEBROOT}"/.env
+            sed -i "/.*AWS_DEFAULT_REGION=.*/c\AWS_DEFAULT_REGION=${S3_REGION}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*S3_REGION=.*/c\#S3_REGION=" "${NGINX_WEBROOT}"/.env
+            sed -i "/.*AWS_DEFAULT_REGION=.*/c\#AWS_DEFAULT_REGION=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${S3_SECRET}" ]; then
-            sed -i "/.*S3_SECRET=.*/c\S3_SECRET=${S3_SECRET}" "${NGINX_WEBROOT}"/.env
+            sed -i "/.*AWS_SECRET_ACCESS_KEY=.*/c\AWS_SECRET_ACCESS_KEY=${S3_SECRET}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*S3_SECRET=.*/c\#S3_SECRET=" "${NGINX_WEBROOT}"/.env
+            sed -i "/.*AWS_SECRET_ACCESS_KEY=.*/c\#AWS_SECRET_ACCESS_KEY=" "${NGINX_WEBROOT}"/.env
         fi
-        if [ -n "${S3_BUCKET}" ]; then
-            sed -i "/.*S3_BUCKET=.*/c\S3_BUCKET=${S3_BUCKET}" "${NGINX_WEBROOT}"/.env
+        if [ -n "${S3_URL}" ]; then
+            sed -i "/.*AWS_URL=.*/c\AWS_URL=${S3_URL}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*S3_BUCKET=.*/c\#S3_BUCKET=" "${NGINX_WEBROOT}"/.env
+            sed -i "/.*AWS_URL=.*/c\#AWS_URL=" "${NGINX_WEBROOT}"/.env
         fi
     else
         print_info "Skipping Auto configuration and using in place .env"
@@ -272,6 +283,8 @@ else
         echo "#API_SECRET=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     fi
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "LOG_PDF_HTML=${LOG_PDF_HTML,,}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "REMEMBER_ME_ENABLED=${SESSION_REMEMBER,,}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "SESSION_EXPIRE_ON_CLOSE=${SESSION_EXPIRE_ON_CLOSE,,}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "AUTO_LOGOUT_SECONDS=${SESSION_LOGOUT_SECONDS}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
@@ -334,25 +347,35 @@ else
         echo "#GOOGLE_MAPS_API_KEY=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     fi
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    if [ -n "${S3_BUCKET}" ]; then
-        echo "S3_BUCKET=${S3_BUCKET}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+   if [ -n "${S3_BUCKET}" ]; then
+        echo "AWS_BUCKET=${S3_BUCKET}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     else
-        echo "#S3_BUCKET=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+        echo "#AWS_BUCKET=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${S3_ENDPOINT}" ]; then
+        echo "AWS_ENDPOINT=${S3_ENDPOINT}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#AWS_ENDPOINT=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     fi
     if [ -n "${S3_KEY}" ]; then
-        echo "S3_KEY=${S3_KEY}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+        echo "AWS_ACCESS_KEY_ID=${S3_KEY}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     else
-        echo "#S3_KEY=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    fi
-    if [ -n "${S3_BUCKET}" ]; then
-        echo "S3_BUCKET=${S3_BUCKET}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    else
-        echo "#S3_BUCKET=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+        echo "#AWS_ACCESS_KEY_ID=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     fi
     if [ -n "${S3_REGION}" ]; then
-        echo "S3_REGION=${S3_REGION}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+        echo "AWS_DEFAULT_REGION=${S3_REGION}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     else
-        echo "#S3_REGION=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+        echo "#AWS_DEFAULT_REGION=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${S3_SECRET}" ]; then
+        echo "AWS_SECRET=${S3_SECRET}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#AWS_SECRET=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${S3_URL}" ]; then
+        echo "AWS_URL=${S3_URL}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#AWS_URL=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     fi
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "EXPANDED_LOGGING=true" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env

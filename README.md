@@ -38,6 +38,7 @@ This will build a Docker Image for [Invoice Ninja](https://invoiceninja.org/) - 
     - [Database Settings](#database-settings)
     - [Mail Settings](#mail-settings)
     - [Performance Settings](#performance-settings)
+    - [S3 Settings](#s3-settings)
   - [Networking](#networking)
 - [Maintenance](#maintenance)
   - [Shell Access](#shell-access)
@@ -121,7 +122,7 @@ Be sure to view the following repositories to understand all the customizable op
 | ------------------------- | -------------------------------------------------------------------------------------------------- | --------------- |
 | `ADMIN_EMAIL`             | Administrator Email Address - Needed for logging in first boot                                     |                 |
 | `ADMIN_PASS`              | Administrator Password - Needed for Logging in                                                     |                 |
-| `APP_ENV`                 | Application environment `local` `development` `production` | `production`
+| `APP_ENV`                 | Application environment `local` `development` `production`                                         | `production`    |
 | `APP_KEY`                 | Application Key if needing to override after a new configuration generation                        |                 |
 | `APP_NAME`                | Change default application name - Default                                                          | `Invoice Ninja` |
 | `DISPLAY_ERRORS`          | Display Errors on Website                                                                          | `FALSE`         |
@@ -129,6 +130,7 @@ Be sure to view the following repositories to understand all the customizable op
 | `ENABLE_GOOGLE_MAPS`      | Enable Google Maps                                                                                 | `TRUE`          |
 | `ENABLE_SSL_PROXY`        | If using SSL reverse proxy force application to return https URLs `TRUE` or `FALSE`                |                 |
 | `LANGUAGE`                | What locale/language                                                                               | `en`            |
+| `LOG_PDF_HTML`            | Log HTML when generating PDF exports                                                               | `FALSE`         |
 | `SETUP_TYPE`              | Automatically edit configuration after first bootup `AUTO` or `MANUAL`                             | `AUTO`          |
 | `SITE_URL`                | The url your site listens on example `https://invoiceninja.example.com`                            |                 |
 | `SESSION_REMEMBER`        | Remember users session                                                                             | `TRUE`          |
@@ -137,39 +139,49 @@ Be sure to view the following repositories to understand all the customizable op
 
 
 #### Database Settings
- | Parameter    | Description                                                     | default |
- | ------------ | --------------------------------------------------------------- | ------- |
- | `DB_HOST`    | Host or container name of MariaDB Server e.g. `invoiceninja-db` |         |
- | `DB_PORT`    | MariaDB Port                                                    | `3306`  |
- | `DB_NAME`    | MariaDB Database name e.g. `invoiceninja`                       |         |
- | `DB_USER`    | MariaDB Username for above Database e.g. `invoiceninja`         |         |
- | `DB_PASS`    | MariaDB Password for above Database e.g. `password`             |         |
- | `REDIS_HOST` | Redis Hostname                                                  | `redis` |
- | `REDIS_PORT` | Redis Port                                                      | `6379`  |
- | `REDIS_PASS` | (optional) Redis Password                                       | `null`  |
+| Parameter    | Description                                                     | default |
+| ------------ | --------------------------------------------------------------- | ------- |
+| `DB_HOST`    | Host or container name of MariaDB Server e.g. `invoiceninja-db` |         |
+| `DB_PORT`    | MariaDB Port                                                    | `3306`  |
+| `DB_NAME`    | MariaDB Database name e.g. `invoiceninja`                       |         |
+| `DB_USER`    | MariaDB Username for above Database e.g. `invoiceninja`         |         |
+| `DB_PASS`    | MariaDB Password for above Database e.g. `password`             |         |
+| `REDIS_HOST` | Redis Hostname                                                  | `redis` |
+| `REDIS_PORT` | Redis Port                                                      | `6379`  |
+| `REDIS_PASS` | (optional) Redis Password                                       | `null`  |
 
 
 #### Mail Settings
- | Parameter           | Description                                                                    | default               |
- | ------------------- | ------------------------------------------------------------------------------ | --------------------- |
- | `MAIL_TYPE`         | Mail Type                                                                      | `smtp`                |
- | `MAIL_ERROR_ADDRESS` | Email this address upon encountering any errors | |
- | `MAIL_FROM_NAME`    | Mail from Name                                                                 | `Invoice Ninja`       |
- | `MAIL_FROM_ADDRESS` | Mail from Address                                                              | `noreply@example.com` |
- | `SMTP_HOST`         | SMTP Server to be used to send messages from Postal Management System to users | `postfix-relay`       |
- | `SMTP_PORT`         | SMTP Port to be used to send messages from Postal Management System to Users   | `25`                  |
- | `SMTP_USER`         | Username to authenticate to SMTP Server                                        | `null`                |
- | `SMTP_PASS`         | Password to authenticate to SMTP Server                                        | `null`                |
- | `SMTP_ENCRYPTION`   | Type of encryption for SMTP `none` `tls`                                       | `none`                |
- | `POSTMARK_SECRET`   | Postmark secret (if using postmark) | |
+| Parameter            | Description                                                                    | default               |
+| -------------------- | ------------------------------------------------------------------------------ | --------------------- |
+| `MAIL_TYPE`          | Mail Type                                                                      | `smtp`                |
+| `MAIL_ERROR_ADDRESS` | Email this address upon encountering any errors                                |                       |
+| `MAIL_FROM_NAME`     | Mail from Name                                                                 | `Invoice Ninja`       |
+| `MAIL_FROM_ADDRESS`  | Mail from Address                                                              | `noreply@example.com` |
+| `SMTP_HOST`          | SMTP Server to be used to send messages from Postal Management System to users | `postfix-relay`       |
+| `SMTP_PORT`          | SMTP Port to be used to send messages from Postal Management System to Users   | `25`                  |
+| `SMTP_USER`          | Username to authenticate to SMTP Server                                        | `null`                |
+| `SMTP_PASS`          | Password to authenticate to SMTP Server                                        | `null`                |
+| `SMTP_ENCRYPTION`    | Type of encryption for SMTP `none` `tls`                                       | `none`                |
+| `POSTMARK_SECRET`    | Postmark secret (if using postmark)                                            |                       |
 
 #### Performance Settings
- | Parameter           | Description       | default    |
- | ------------------- | ----------------- | ---------- |
- | `CACHE_DRIVER`      | Cache Driver `file` `redis` `database`     | `file`     |
- | `FILESYSTEM_DRIVER` | Filesystem Driver | `local`    |
- | `SESSION_DRIVER`  | Session Driver  `file` `redis` `database` | `database` |
- | `QUEUE_CONNECTION`  | Queue Connection  `sync `file` `redis` | `file` |
+| Parameter           | Description                               | default    |
+| ------------------- | ----------------------------------------- | ---------- |
+| `CACHE_DRIVER`      | Cache Driver `file` `redis` `database`    | `file`     |
+| `FILESYSTEM_DRIVER` | Filesystem Driver `local` `public`        | `local`    |
+| `SESSION_DRIVER`    | Session Driver  `file` `redis` `database` | `database` |
+| `QUEUE_CONNECTION`  | Queue Connection  `sync `file` `redis`    | `file`     |
+
+#### S3 Settings
+| Parameter     | Description                                | default |
+| ------------- | ------------------------------------------ | ------- |
+| `S3_BUCKET`   | S3 Bucket eg `bucket_name`                 |         |
+| `S3_ENDPOINT` | S3 Endpoint eg `https://endpoint.com`      |         |
+| `S3_KEY`      | S3 Key ID eg `s3_compatible_key`           |         |
+| `S3_REGION`   | S3 Region eg `us-east-1`                   |         |
+| `S3_SECRET`   | S3 Key Secret eg `a_long_and_glorious_key` |         |
+| `S3_URL`      | S3 URL eg `https://endpoint.com`           |         |
 
 
 ### Networking
