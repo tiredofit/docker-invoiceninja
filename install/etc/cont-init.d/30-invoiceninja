@@ -81,7 +81,7 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         else
             sed -i --follow-symlinks "s|APP_DEBUG=.*|APP_DEBUG=false|g" "${NGINX_WEBROOT}"/.env
         fi
-        sed -i --follow-symlinks "s|APP_LOCALE=.*|APP_LOCALE=${APP_LANGUAGE}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|APP_LOCALE=.*|APP_LOCALE=${LANGUAGE}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|DB_HOST=.*|DB_HOST=${DB_HOST}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|DB_PORT=.*|DB_PORT=${DB_PORT}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|DB_DATABASE=.*|DB_DATABASE=${DB_NAME}|g" "${NGINX_WEBROOT}"/.env

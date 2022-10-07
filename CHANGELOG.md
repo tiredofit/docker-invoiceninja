@@ -1,3 +1,9 @@
+## 0.99.2 2022-10-07 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Fix issue with LANGUAGE environment variable
+
+
 ## 0.99.1 2022-10-07 <dave at tiredofit dot ca>
 
    ### Added
