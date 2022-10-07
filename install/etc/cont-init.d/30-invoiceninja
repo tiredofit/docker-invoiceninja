@@ -74,7 +74,7 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
             sed -i --follow-symlinks "s|APP_URL=.*|APP_URL=${SITE_URL}|g" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${APP_KEY}" ]; then
-            sed -i "/.*APP_KEY=.*/c\APP_KEY=${APP_KEY}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*APP_KEY=.*/c\APP_KEY=${APP_KEY}" "${NGINX_WEBROOT}"/.env
         fi
         if var_true "${APP_DEBUG}" || var_true "${DISPLAY_ERRORS}" ; then
             sed -i --follow-symlinks "s|APP_DEBUG=.*|APP_DEBUG=true|g" "${NGINX_WEBROOT}"/.env
@@ -101,19 +101,19 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         sed -i --follow-symlinks "s|MAIL_FROM_ADDRESS=.*|MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|MAIL_FROM_NAME=.*|MAIL_FROM_NAME='${MAIL_FROM_NAME}'|g" "${NGINX_WEBROOT}"/.env
         if [ -n "${POSTMARK_SECRET}" ]; then
-            sed -i "/.*POSTMARK_SECRET=.*/c\POSTMARK_SECRET=${POSTMARK_SECRET}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*POSTMARK_SECRET=.*/c\POSTMARK_SECRET=${POSTMARK_SECRET}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*POSTMARK_SECRET=.*/c\#POSTMARK_SECRET=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*POSTMARK_SECRET=.*/c\#POSTMARK_SECRET=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${MAIL_ERROR_ADDRESS}" ]; then
-            sed -i "/.*ERROR_EMAIL=.*/c\ERROR_EMAIL=${MAIL_ERROR_ADDRESS}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*ERROR_EMAIL=.*/c\ERROR_EMAIL=${MAIL_ERROR_ADDRESS}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*ERROR_EMAIL=.*/c\#ERROR_EMAIL=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*ERROR_EMAIL=.*/c\#ERROR_EMAIL=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${API_SECRET}" ]; then
-            sed -i "/.*API_SECRET=.*/c\API_SECRET=${API_SECRET}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*API_SECRET=.*/c\API_SECRET=${API_SECRET}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*API_SECRET=.*/c\#API_SECRET=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*API_SECRET=.*/c\#API_SECRET=" "${NGINX_WEBROOT}"/.env
         fi
         sed -i --follow-symlinks "s|LOG_PDF_HTML=.*|LOG_PDF_HTML=${LOG_PDF_HTML,,}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|REMEMBER_ME_ENABLED=.*|REMEMBER_ME_ENABLED=${SESSION_REMEMBER,,}|g" "${NGINX_WEBROOT}"/.env
@@ -122,101 +122,101 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         sed -i --follow-symlinks "s|QUEUE_CONNECTION=.*|QUEUE_CONNECTION=${QUEUE_CONNECTION}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|SESSION_DRIVER=.*|SESSION_DRIVER=${SESSION_DRIVER}|g" "${NGINX_WEBROOT}"/.env
         if [ -n "${SESSION_SECURE}" ]; then
-            sed -i "/.*SESSION_SECURE=.*/c\SESSION_SECURE=${SESSION_SECURE}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*SESSION_SECURE=.*/c\SESSION_SECURE=${SESSION_SECURE}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*SESSION_SECURE=.*/c\#SESSION_SECURE=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*SESSION_SECURE=.*/c\#SESSION_SECURE=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${SESSION_ENCRYPT}" ]; then
-            sed -i "/.*SESSION_ENCRYPT=.*/c\SESSION_ENCRYPT=${SESSION_ENCRYPT}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*SESSION_ENCRYPT=.*/c\SESSION_ENCRYPT=${SESSION_ENCRYPT}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*SESSION_ENCRYPT=.*/c\#SESSION_ENCRYPT=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*SESSION_ENCRYPT=.*/c\#SESSION_ENCRYPT=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${SESSION_SECURE}" ]; then
-            sed -i "/.*SESSION_SECURE=.*/c\SESSION_SECURE=${SESSION_SECURE}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*SESSION_SECURE=.*/c\SESSION_SECURE=${SESSION_SECURE}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*SESSION_SECURE=.*/c\#SESSION_SECURE=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*SESSION_SECURE=.*/c\#SESSION_SECURE=" "${NGINX_WEBROOT}"/.env
         fi
         sed -i --follow-symlinks "s|CACHE_DRIVER=.*|CACHE_DRIVER=${CACHE_DRIVER}|g" "${NGINX_WEBROOT}"/.env
         if [ -n "${CACHE_DRIVER}" ]; then
-            sed -i "/.*CACHE_DRIVER=.*/c\CACHE_DRIVER=${CACHE_DRIVER}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*CACHE_DRIVER=.*/c\CACHE_DRIVER=${CACHE_DRIVER}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*CACHE_DRIVER=.*/c\#CACHE_DRIVER=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*CACHE_DRIVER=.*/c\#CACHE_DRIVER=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${CACHE_HOST}" ]; then
-            sed -i "/.*CACHE_HOST=.*/c\CACHE_HOST=${CACHE_HOST}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*CACHE_HOST=.*/c\CACHE_HOST=${CACHE_HOST}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*CACHE_HOST=.*/c\#CACHE_HOST=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*CACHE_HOST=.*/c\#CACHE_HOST=" "${NGINX_WEBROOT}"/.env
         fi
         sed -i --follow-symlinks "s|REDIS_HOST=.*|REDIS_HOST=${REDIS_HOST}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|REDIS_PORT=.*|REDIS_PORT=${REDIS_HOST}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|REDIS_PASSWORD=.*|REDIS_PASSWORD=${REDIS_PASS}|g" "${NGINX_WEBROOT}"/.env
         if [ -n "${CACHE_PORT1}" ]; then
-            sed -i "/.*CACHE_PORT1=.*/c\CACHE_PORT1=${CACHE_PORT1}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*CACHE_PORT1=.*/c\CACHE_PORT1=${CACHE_PORT1}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*CACHE_PORT1=.*/c\#CACHE_PORT1=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*CACHE_PORT1=.*/c\#CACHE_PORT1=" "${NGINX_WEBROOT}"/.env
         fi
 
         if [ -n "${CACHE_PORT2}" ]; then
-            sed -i "/.*CACHE_PORT2=.*/c\CACHE_PORT2=${CACHE_PORT2}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*CACHE_PORT2=.*/c\CACHE_PORT2=${CACHE_PORT2}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*CACHE_PORT2=.*/c\#CACHE_PORT2=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*CACHE_PORT2=.*/c\#CACHE_PORT2=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${AUTHENTICATION_GOOGLE_ID}" ]; then
-            sed -i "/.*GOOGLE_CLIENT_ID=.*/c\GOOGLE_CLIENT_ID=${AUTHENTICATION_GOOGLE_ID}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*GOOGLE_CLIENT_ID=.*/c\GOOGLE_CLIENT_ID=${AUTHENTICATION_GOOGLE_ID}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*GOOGLE_CLIENT_ID=.*/c\#GOOGLE_CLIENT_ID=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*GOOGLE_CLIENT_ID=.*/c\#GOOGLE_CLIENT_ID=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${AUTHENTICATION_GOOGLE_SECRET}" ]; then
-            sed -i "/.*GOOGLE_CLIENT_SECRET=.*/c\GOOGLE_CLIENT_SECRET=${AUTHENTICATION_GOOGLE_SECRET}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*GOOGLE_CLIENT_SECRET=.*/c\GOOGLE_CLIENT_SECRET=${AUTHENTICATION_GOOGLE_SECRET}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*GOOGLE_CLIENT_SECRET=.*/c\#GOOGLE_CLIENT_SECRET=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*GOOGLE_CLIENT_SECRET=.*/c\#GOOGLE_CLIENT_SECRET=" "${NGINX_WEBROOT}"/.env
         fi
         sed -i --follow-symlinks "s|GOOGLE_MAPS_ENABLED=.*|GOOGLE_MAPS_ENABLED=${ENABLE_GOOGLE_MAPS,,}|g" "${NGINX_WEBROOT}"/.env
         if [ -n "${GOOGLE_MAPS_API_KEY}" ]; then
-            sed -i "/.*GOOGLE_MAPS_API_KEY=.*/c\GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*GOOGLE_MAPS_API_KEY=.*/c\GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*GOOGLE_MAPS_API_KEY=.*/c\#GOOGLE_MAPS_API_KEY=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*GOOGLE_MAPS_API_KEY=.*/c\#GOOGLE_MAPS_API_KEY=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${S3_BUCKET}" ]; then
-            sed -i "/.*AWS_BUCKET=.*/c\AWS_BUCKET=${S3_BUCKET}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*AWS_BUCKET=.*/c\AWS_BUCKET=${S3_BUCKET}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*AWS_BUCKET=.*/c\#AWS_BUCKET=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*AWS_BUCKET=.*/c\#AWS_BUCKET=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${S3_ENDPOINT}" ]; then
-            sed -i "/.*AWS_ENDPOINT=.*/c\AWS_ENDPOINT=${S3_ENDPOINT}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*AWS_ENDPOINT=.*/c\AWS_ENDPOINT=${S3_ENDPOINT}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*AWS_ENDPOINT=.*/c\#AWS_ENDPOINT=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*AWS_ENDPOINT=.*/c\#AWS_ENDPOINT=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${S3_KEY}" ]; then
-            sed -i "/.*AWS_ACCESS_KEY_ID=.*/c\AWS_ACCESS_KEY_ID=${S3_KEY}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*AWS_ACCESS_KEY_ID=.*/c\AWS_ACCESS_KEY_ID=${S3_KEY}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*AWS_ACCESS_KEY_ID=.*/c\#AWS_ACCESS_KEY_ID=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*AWS_ACCESS_KEY_ID=.*/c\#AWS_ACCESS_KEY_ID=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${S3_REGION}" ]; then
-            sed -i "/.*AWS_DEFAULT_REGION=.*/c\AWS_DEFAULT_REGION=${S3_REGION}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*AWS_DEFAULT_REGION=.*/c\AWS_DEFAULT_REGION=${S3_REGION}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*AWS_DEFAULT_REGION=.*/c\#AWS_DEFAULT_REGION=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*AWS_DEFAULT_REGION=.*/c\#AWS_DEFAULT_REGION=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${S3_SECRET}" ]; then
-            sed -i "/.*AWS_SECRET_ACCESS_KEY=.*/c\AWS_SECRET_ACCESS_KEY=${S3_SECRET}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*AWS_SECRET_ACCESS_KEY=.*/c\AWS_SECRET_ACCESS_KEY=${S3_SECRET}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*AWS_SECRET_ACCESS_KEY=.*/c\#AWS_SECRET_ACCESS_KEY=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*AWS_SECRET_ACCESS_KEY=.*/c\#AWS_SECRET_ACCESS_KEY=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${S3_URL}" ]; then
-            sed -i "/.*AWS_URL=.*/c\AWS_URL=${S3_URL}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*AWS_URL=.*/c\AWS_URL=${S3_URL}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*AWS_URL=.*/c\#AWS_URL=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*AWS_URL=.*/c\#AWS_URL=" "${NGINX_WEBROOT}"/.env
         fi
         if [ -n "${OPENEXCHANGE_APP_ID}" ]; then
-            sed -i "/.*OPENEXCHANGE_APP_ID=.*/c\OPENEXCHANGE_APP_ID=${OPENEXCHANGE_APP_ID}" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*OPENEXCHANGE_APP_ID=.*/c\OPENEXCHANGE_APP_ID=${OPENEXCHANGE_APP_ID}" "${NGINX_WEBROOT}"/.env
         else
-            sed -i "/.*OPENEXCHANGE_APP_ID=.*/c\#OPENEXCHANGE_APP_ID=" "${NGINX_WEBROOT}"/.env
+            sed -i --follow-symlinks "/.*OPENEXCHANGE_APP_ID=.*/c\#OPENEXCHANGE_APP_ID=" "${NGINX_WEBROOT}"/.env
         fi
-            if [ -n "${OPENEXCHANGE_APP_ID}" ]; then
-        echo "OPENEXCHANGE_APP_ID=${OPENEXCHANGE_APP_ID}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    else
-        echo "#OPENEXCHANGE_APP_ID=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    fi
+        if [ -n "${OPENEXCHANGE_APP_ID}" ]; then
+            echo "OPENEXCHANGE_APP_ID=${OPENEXCHANGE_APP_ID}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+        else
+            echo "#OPENEXCHANGE_APP_ID=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+        fi
     else
         print_info "Skipping Auto configuration and using in place .env"
     fi
@@ -394,6 +394,7 @@ else
     fi
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "EXPANDED_LOGGING=true" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "PDF_GENERATOR=snappdf" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     # Generate Key
     cd "${NGINX_WEBROOT}"/
     chown -R "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"/config
