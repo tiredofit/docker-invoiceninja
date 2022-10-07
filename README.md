@@ -131,6 +131,7 @@ Be sure to view the following repositories to understand all the customizable op
 | `ENABLE_SSL_PROXY`        | If using SSL reverse proxy force application to return https URLs `TRUE` or `FALSE`                |                 |
 | `LANGUAGE`                | What locale/language                                                                               | `en`            |
 | `LOG_PDF_HTML`            | Log HTML when generating PDF exports                                                               | `FALSE`         |
+| `OPENEXCHANGE_APP_ID`     | Open Exchange APP ID for currency exchange                                                         |                 |
 | `SETUP_TYPE`              | Automatically edit configuration after first bootup `AUTO` or `MANUAL`                             | `AUTO`          |
 | `SITE_URL`                | The url your site listens on example `https://invoiceninja.example.com`                            |                 |
 | `SESSION_REMEMBER`        | Remember users session                                                                             | `TRUE`          |
@@ -166,12 +167,12 @@ Be sure to view the following repositories to understand all the customizable op
 | `POSTMARK_SECRET`    | Postmark secret (if using postmark)                                            |                       |
 
 #### Performance Settings
-| Parameter           | Description                               | default    |
-| ------------------- | ----------------------------------------- | ---------- |
-| `CACHE_DRIVER`      | Cache Driver `file` `redis` `database`    | `file`     |
-| `FILESYSTEM_DRIVER` | Filesystem Driver `local` `public`        | `local`    |
-| `SESSION_DRIVER`    | Session Driver  `file` `redis` `database` | `database` |
-| `QUEUE_CONNECTION`  | Queue Connection  `sync `file` `redis`    | `file`     |
+| Parameter           | Description                                | default    |
+| ------------------- | ------------------------------------------ | ---------- |
+| `CACHE_DRIVER`      | Cache Driver `file` `redis` `database`     | `file`     |
+| `FILESYSTEM_DRIVER` | Filesystem Driver `local` `public`         | `local`    |
+| `SESSION_DRIVER`    | Session Driver  `file` `redis` `database`  | `database` |
+| `QUEUE_CONNECTION`  | Queue Connection  `sync` `file` `redis`    | `file`     |
 
 #### S3 Settings
 | Parameter     | Description                                | default |

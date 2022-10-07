@@ -207,6 +207,16 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         else
             sed -i "/.*AWS_URL=.*/c\#AWS_URL=" "${NGINX_WEBROOT}"/.env
         fi
+        if [ -n "${OPENEXCHANGE_APP_ID}" ]; then
+            sed -i "/.*OPENEXCHANGE_APP_ID=.*/c\OPENEXCHANGE_APP_ID=${OPENEXCHANGE_APP_ID}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*OPENEXCHANGE_APP_ID=.*/c\#OPENEXCHANGE_APP_ID=" "${NGINX_WEBROOT}"/.env
+        fi
+            if [ -n "${OPENEXCHANGE_APP_ID}" ]; then
+        echo "OPENEXCHANGE_APP_ID=${OPENEXCHANGE_APP_ID}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#OPENEXCHANGE_APP_ID=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
     else
         print_info "Skipping Auto configuration and using in place .env"
     fi
@@ -376,6 +386,11 @@ else
         echo "AWS_URL=${S3_URL}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     else
         echo "#AWS_URL=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${OPENEXCHANGE_APP_ID}" ]; then
+        echo "OPENEXCHANGE_APP_ID=${OPENEXCHANGE_APP_ID}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#OPENEXCHANGE_APP_ID=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     fi
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "EXPANDED_LOGGING=true" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
