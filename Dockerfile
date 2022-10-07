@@ -19,6 +19,7 @@ ENV INVOICENINJA_VERSION=v5.5.27 \
     PHP_ENABLE_SODIUM=TRUE \
     PHP_ENABLE_TOKENIZER=TRUE \
     PHP_ENABLE_ZIP=TRUE \
+    PHP_MEMORY_LIMIT=512M \
     IMAGE_NAME="tiredofit/invoiceninja" \
     IMAGE_REPO_URL="https://github.com/tiredofit/docker-invoiceninja/"
 
