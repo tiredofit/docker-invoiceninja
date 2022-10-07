@@ -34,6 +34,10 @@ This will build a Docker Image for [Invoice Ninja](https://invoiceninja.org/) - 
   - [Persistent Storage](#persistent-storage)
   - [Environment Variables](#environment-variables)
     - [Base Images used](#base-images-used)
+    - [Application Settings](#application-settings)
+    - [Database Settings](#database-settings)
+    - [Mail Settings](#mail-settings)
+    - [Performance Settings](#performance-settings)
   - [Networking](#networking)
 - [Maintenance](#maintenance)
   - [Shell Access](#shell-access)
@@ -111,38 +115,56 @@ Be sure to view the following repositories to understand all the customizable op
 | [PHP-FPM](https://github.com/tiredofit/docker-nginx-php-fpm/) | PHP Interpreter                        |
 
 
-| Parameter                 | Description                                                                                        | default               |
-| ------------------------- | -------------------------------------------------------------------------------------------------- | --------------------- |
-| `ADMIN_EMAIL`             | Administrator Email Address - Needed for logging in first boot                                     |                       |
-| `ADMIN_PASS`              | Administrator Password - Needed for Logging in                                                     |                       |
-| `APP_NAME`                | Change default application name - Default                                                          | `Invoice Ninja`       |
-| `APP_PROXY`               | Allow Application to use a proxy for fetching modules                                              |                       |
-| `DB_HOST`                 | Host or container name of MariaDB Server e.g. `invoiceninja-db`                                    |                       |
-| `DB_PORT`                 | MariaDB Port                                                                                       | `3306`                |
-| `DB_NAME`                 | MariaDB Database name e.g. `invoiceninja`                                                          |                       |
-| `DB_USER`                 | MariaDB Username for above Database e.g. `invoiceninja`                                            |                       |
-| `DB_PASS`                 | MariaDB Password for above Database e.g. `password`                                                |                       |
-| `DISPLAY_ERRORS`          | Display Errors on Website                                                                          | `FALSE`               |
-| `ENABLE_AUTO_UPDATE`      | If coming from an earlier version of image, automatically update it to latest invoiceninja release | `TRUE`                |
-| `ENABLE_SSL_PROXY`        | If using SSL reverse proxy force application to return https URLs `TRUE` or `FALSE`                |                       |
-| `SETUP_TYPE`              | Automatically edit configuration after first bootup `AUTO` or `MANUAL`                             | `AUTO`                |
-| `SITE_URL`                | The url your site listens on example `https://invoiceninja.example.com`                            |                       |
-| `LANGUAGE`                | What locale/language                                                                               | `en`                  |
-| `FILESYSTEM_DRIVER`       | Filesystem Driver                                                                                  | `local`               |
-| `ENABLE_GOOGLE_MAPS`      | Enable Google Maps                                                                                 | `TRUE`                |
-| `MAIL_TYPE`               | Mail Type                                                                                          | `smtp`                |
-| `SESSION_REMEMBER`        | Remember users session                                                                             | `TRUE`                |
-| `SESSION_LOGOUT_SECONDS`  | Auto logout users after amount of seconds                                                          | `28800`               |
-| `SESSION_EXPIRE_ON_CLOSE` | Expire session on browser close                                                                    | `FALSE`               |
-| `MAIL_FROM_NAME`          | Mail from Name                                                                                     | `Invoice Ninja`       |
-| `MAIL_FROM_ADDRESS`       | Mail from Address                                                                                  | `noreply@example.com` |
-| `SMTP_HOST`               | SMTP Server to be used to send messages from Postal Management System to users                     | `postfix-relay`       |
-| `SMTP_PORT`               | SMTP Port to be used to send messages from Postal Management System to Users                       | `25`                  |
-| `SMTP_USER`               | Username to authenticate to SMTP Server                                                            | `null`                |
-| `SMTP_PASS`               | Password to authenticate to SMTP Server                                                            | `null`                |
-| `SMTP_ENCRYPTION`         | Type of encryption for SMTP `none` `tls`                                                           | `none`                |
-| `QUEUE_CONNECTION`        | Queue Connection                                                                                   | `database`            |
 
+#### Application Settings
+| Parameter                 | Description                                                                                        | default         |
+| ------------------------- | -------------------------------------------------------------------------------------------------- | --------------- |
+| `ADMIN_EMAIL`             | Administrator Email Address - Needed for logging in first boot                                     |                 |
+| `ADMIN_PASS`              | Administrator Password - Needed for Logging in                                                     |                 |
+| `APP_KEY`                 | Application Key if needing to override after a new configuration generation                        |                 |
+| `APP_NAME`                | Change default application name - Default                                                          | `Invoice Ninja` |
+| `DISPLAY_ERRORS`          | Display Errors on Website                                                                          | `FALSE`         |
+| `ENABLE_AUTO_UPDATE`      | If coming from an earlier version of image, automatically update it to latest invoiceninja release | `TRUE`          |
+| `ENABLE_GOOGLE_MAPS`      | Enable Google Maps                                                                                 | `TRUE`          |
+| `ENABLE_SSL_PROXY`        | If using SSL reverse proxy force application to return https URLs `TRUE` or `FALSE`                |                 |
+| `LANGUAGE`                | What locale/language                                                                               | `en`            |
+| `SETUP_TYPE`              | Automatically edit configuration after first bootup `AUTO` or `MANUAL`                             | `AUTO`          |
+| `SITE_URL`                | The url your site listens on example `https://invoiceninja.example.com`                            |                 |
+| `SESSION_REMEMBER`        | Remember users session                                                                             | `TRUE`          |
+| `SESSION_LOGOUT_SECONDS`  | Auto logout users after amount of seconds                                                          | `28800`         |
+| `SESSION_EXPIRE_ON_CLOSE` | Expire session on browser close                                                                    | `FALSE`         |
+
+
+#### Database Settings
+ | Parameter    | Description                                                     | default |
+ | ------------ | --------------------------------------------------------------- | ------- |
+ | `DB_HOST`    | Host or container name of MariaDB Server e.g. `invoiceninja-db` |         |
+ | `DB_PORT`    | MariaDB Port                                                    | `3306`  |
+ | `DB_NAME`    | MariaDB Database name e.g. `invoiceninja`                       |         |
+ | `DB_USER`    | MariaDB Username for above Database e.g. `invoiceninja`         |         |
+ | `DB_PASS`    | MariaDB Password for above Database e.g. `password`             |         |
+ | `REDIS_HOST` | Redis Hostname                                                  | `redis` |
+ | `REDIS_PORT` | Redis Port                                                      | `6379`  |
+ | `REDIS_PASS` | (optional) Redis Password                                       | `null`  |
+
+
+#### Mail Settings
+ | Parameter           | Description                                                                    | default               |
+ | ------------------- | ------------------------------------------------------------------------------ | --------------------- |
+ | `MAIL_TYPE`         | Mail Type                                                                      | `smtp`                |
+ | `MAIL_FROM_NAME`    | Mail from Name                                                                 | `Invoice Ninja`       |
+ | `MAIL_FROM_ADDRESS` | Mail from Address                                                              | `noreply@example.com` |
+ | `SMTP_HOST`         | SMTP Server to be used to send messages from Postal Management System to users | `postfix-relay`       |
+ | `SMTP_PORT`         | SMTP Port to be used to send messages from Postal Management System to Users   | `25`                  |
+ | `SMTP_USER`         | Username to authenticate to SMTP Server                                        | `null`                |
+ | `SMTP_PASS`         | Password to authenticate to SMTP Server                                        | `null`                |
+ | `SMTP_ENCRYPTION`   | Type of encryption for SMTP `none` `tls`                                       | `none`                |
+
+#### Performance Settings
+ | Parameter           | Description       | default    |
+ | ------------------- | ----------------- | ---------- |
+ | `QUEUE_CONNECTION`  | Queue Connection  | `database` |
+ | `FILESYSTEM_DRIVER` | Filesystem Driver | `local`    |
 
 ### Networking
 

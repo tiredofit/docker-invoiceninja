@@ -134,11 +134,9 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         else
             sed -i "/.*CACHE_HOST=.*/c\#CACHE_HOST=" "${NGINX_WEBROOT}"/.env
         fi
-        if [ -n "${REDIS_HOST}" ]; then
-            sed -i "/.*REDIS_HOST=.*/c\REDIS_HOST=${REDIS_HOST}" "${NGINX_WEBROOT}"/.env
-        else
-            sed -i "/.*REDIS_HOST=.*/c\#REDIS_HOST=" "${NGINX_WEBROOT}"/.env
-        fi
+        sed -i --follow-symlinks "s|REDIS_HOST=.*|REDIS_HOST=${REDIS_HOST}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|REDIS_PORT=.*|REDIS_PORT=${REDIS_HOST}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|REDIS_PASSWORD=.*|REDIS_PASSWORD=${REDIS_PASS}|g" "${NGINX_WEBROOT}"/.env
         if [ -n "${CACHE_PORT1}" ]; then
             sed -i "/.*CACHE_PORT1=.*/c\CACHE_PORT1=${CACHE_PORT1}" "${NGINX_WEBROOT}"/.env
         else
@@ -284,11 +282,9 @@ else
     else
         echo "#CACHE_HOST=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     fi
-    if [ -n "${REDIS_HOST}" ]; then
-        echo "REDIS_HOST=${REDIS_HOST}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    else
-        echo "#REDIS_HOST=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    fi
+    echo "REDIS_HOST=${REDIS_HOST}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "REDIS_PORT=${REDIS_PORT}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "REDIS_PASSWORD=${REDIS_PASS}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     if [ -n "${CACHE_PORT1}" ]; then
         echo "CACHE_PORT1=${CACHE_PORT1}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     else
