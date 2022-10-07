@@ -121,6 +121,7 @@ Be sure to view the following repositories to understand all the customizable op
 | ------------------------- | -------------------------------------------------------------------------------------------------- | --------------- |
 | `ADMIN_EMAIL`             | Administrator Email Address - Needed for logging in first boot                                     |                 |
 | `ADMIN_PASS`              | Administrator Password - Needed for Logging in                                                     |                 |
+| `APP_ENV`                 | Application environment `local` `development` `production` | `production`
 | `APP_KEY`                 | Application Key if needing to override after a new configuration generation                        |                 |
 | `APP_NAME`                | Change default application name - Default                                                          | `Invoice Ninja` |
 | `DISPLAY_ERRORS`          | Display Errors on Website                                                                          | `FALSE`         |
@@ -152,6 +153,7 @@ Be sure to view the following repositories to understand all the customizable op
  | Parameter           | Description                                                                    | default               |
  | ------------------- | ------------------------------------------------------------------------------ | --------------------- |
  | `MAIL_TYPE`         | Mail Type                                                                      | `smtp`                |
+ | `MAIL_ERROR_ADDRESS` | Email this address upon encountering any errors | |
  | `MAIL_FROM_NAME`    | Mail from Name                                                                 | `Invoice Ninja`       |
  | `MAIL_FROM_ADDRESS` | Mail from Address                                                              | `noreply@example.com` |
  | `SMTP_HOST`         | SMTP Server to be used to send messages from Postal Management System to users | `postfix-relay`       |
@@ -159,12 +161,16 @@ Be sure to view the following repositories to understand all the customizable op
  | `SMTP_USER`         | Username to authenticate to SMTP Server                                        | `null`                |
  | `SMTP_PASS`         | Password to authenticate to SMTP Server                                        | `null`                |
  | `SMTP_ENCRYPTION`   | Type of encryption for SMTP `none` `tls`                                       | `none`                |
+ | `POSTMARK_SECRET`   | Postmark secret (if using postmark) | |
 
 #### Performance Settings
  | Parameter           | Description       | default    |
  | ------------------- | ----------------- | ---------- |
- | `QUEUE_CONNECTION`  | Queue Connection  | `database` |
+ | `CACHE_DRIVER`      | Cache Driver `file` `redis` `database`     | `file`     |
  | `FILESYSTEM_DRIVER` | Filesystem Driver | `local`    |
+ | `SESSION_DRIVER`  | Session Driver  `file` `redis` `database` | `database` |
+ | `QUEUE_CONNECTION`  | Queue Connection  `sync `file` `redis` | `file` |
+
 
 ### Networking
 

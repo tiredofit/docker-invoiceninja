@@ -100,6 +100,16 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         sed -i --follow-symlinks "s|MAIL_PASSWORD=.*|MAIL_PASSWORD=${SMTP_PASS}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|MAIL_FROM_ADDRESS=.*|MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|MAIL_FROM_NAME=.*|MAIL_FROM_NAME='${MAIL_FROM_NAME}'|g" "${NGINX_WEBROOT}"/.env
+        if [ -n "${POSTMARK_SECRET}" ]; then
+            sed -i "/.*POSTMARK_SECRET=.*/c\POSTMARK_SECRET=${POSTMARK_SECRET}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*POSTMARK_SECRET=.*/c\#POSTMARK_SECRET=" "${NGINX_WEBROOT}"/.env
+        fi
+        if [ -n "${MAIL_ERROR_ADDRESS}" ]; then
+            sed -i "/.*ERROR_EMAIL=.*/c\ERROR_EMAIL=${MAIL_ERROR_ADDRESS}" "${NGINX_WEBROOT}"/.env
+        else
+            sed -i "/.*ERROR_EMAIL=.*/c\#ERROR_EMAIL=" "${NGINX_WEBROOT}"/.env
+        fi
         if [ -n "${API_SECRET}" ]; then
             sed -i "/.*API_SECRET=.*/c\API_SECRET=${API_SECRET}" "${NGINX_WEBROOT}"/.env
         else
@@ -108,6 +118,7 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         sed -i --follow-symlinks "s|REMEMBER_ME_ENABLED=.*|REMEMBER_ME_ENABLED=${SESSION_REMEMBER,,}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|SESSION_EXPIRE_ON_CLOSE=.*|SESSION_EXPIRE_ON_CLOSE=${SESSION_EXPIRE_ON_CLOSE,,}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|AUTO_LOGOUT_SECONDS=.*|AUTO_LOGOUT_SECONDS=${SESSION_LOGOUT_SECONDS}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|QUEUE_CONNECTION=.*|QUEUE_CONNECTION=${QUEUE_CONNECTION}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|SESSION_DRIVER=.*|SESSION_DRIVER=${SESSION_DRIVER}|g" "${NGINX_WEBROOT}"/.env
         if [ -n "${SESSION_SECURE}" ]; then
             sed -i "/.*SESSION_SECURE=.*/c\SESSION_SECURE=${SESSION_SECURE}" "${NGINX_WEBROOT}"/.env
@@ -124,6 +135,7 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         else
             sed -i "/.*SESSION_SECURE=.*/c\#SESSION_SECURE=" "${NGINX_WEBROOT}"/.env
         fi
+        sed -i --follow-symlinks "s|CACHE_DRIVER=.*|CACHE_DRIVER=${CACHE_DRIVER}|g" "${NGINX_WEBROOT}"/.env
         if [ -n "${CACHE_DRIVER}" ]; then
             sed -i "/.*CACHE_DRIVER=.*/c\CACHE_DRIVER=${CACHE_DRIVER}" "${NGINX_WEBROOT}"/.env
         else
@@ -243,6 +255,16 @@ else
     echo "MAIL_PASSWORD=${SMTP_PASS}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "MAIL_FROM_ADDRESS='${MAIL_FROM_ADDRESS}'" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "MAIL_FROM_NAME='${MAIL_FROM_NAME}'" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    if [ -n "${POSTMARK_SECRET}" ]; then
+        echo "POSTMARK_SECRET=${POSTMARK_SECRET}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#POSTMARK_SECRET=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
+    if [ -n "${MAIL_ERROR_ADDRESS}" ]; then
+        echo "ERROR_EMAIL='${MAIL_ERROR_ADDRESS}'" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    else
+        echo "#ERROR_EMAIL=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    fi
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     if [ -n "${API_SECRET}" ]; then
         echo "API_SECRET=${API_SECRET}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
@@ -254,6 +276,7 @@ else
     echo "SESSION_EXPIRE_ON_CLOSE=${SESSION_EXPIRE_ON_CLOSE,,}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "AUTO_LOGOUT_SECONDS=${SESSION_LOGOUT_SECONDS}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "QUEUE_CONNECTION=${QUEUE_CONNECTION}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "SESSION_DRIVER=${SESSION_DRIVER}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     if [ -n "${SESSION_ENCRYPT}" ]; then
         echo "SESSION_ENCRYPT=${SESSION_ENCRYPT}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
@@ -272,11 +295,7 @@ else
         echo "#SESSION_SECURE=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     fi
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    if [ -n "${CACHE_DRIVER}" ]; then
-        echo "CACHE_DRIVER=${CACHE_DRIVER}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    else
-        echo "#CACHE_DRIVER=" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
-    fi
+    echo "CACHE_DRIVER=${CACHE_DRIVER}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     if [ -n "${CACHE_HOST}" ]; then
         echo "CACHE_HOST=${CACHE_HOST}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     else
