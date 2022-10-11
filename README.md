@@ -116,9 +116,8 @@ Be sure to view the following repositories to understand all the customizable op
 | [PHP-FPM](https://github.com/tiredofit/docker-nginx-php-fpm/) | PHP Interpreter                        |
 
 
-
 #### Application Settings
-| Parameter                 | Description                                                                                        | default         |
+| Parameter                 | Description                                                                                        | Default         |
 | ------------------------- | -------------------------------------------------------------------------------------------------- | --------------- |
 | `ADMIN_EMAIL`             | Administrator Email Address - Needed for logging in first boot                                     |                 |
 | `ADMIN_PASS`              | Administrator Password - Needed for Logging in                                                     |                 |
@@ -140,7 +139,7 @@ Be sure to view the following repositories to understand all the customizable op
 
 
 #### Database Settings
-| Parameter    | Description                                                     | default |
+| Parameter    | Description                                                     | Default |
 | ------------ | --------------------------------------------------------------- | ------- |
 | `DB_HOST`    | Host or container name of MariaDB Server e.g. `invoiceninja-db` |         |
 | `DB_PORT`    | MariaDB Port                                                    | `3306`  |
@@ -153,7 +152,7 @@ Be sure to view the following repositories to understand all the customizable op
 
 
 #### Mail Settings
-| Parameter            | Description                                                                    | default               |
+| Parameter            | Description                                                                    | Default               |
 | -------------------- | ------------------------------------------------------------------------------ | --------------------- |
 | `MAIL_TYPE`          | Mail Type                                                                      | `smtp`                |
 | `MAIL_ERROR_ADDRESS` | Email this address upon encountering any errors                                |                       |
@@ -167,7 +166,7 @@ Be sure to view the following repositories to understand all the customizable op
 | `POSTMARK_SECRET`    | Postmark secret (if using postmark)                                            |                       |
 
 #### Performance Settings
-| Parameter           | Description                                | default    |
+| Parameter           | Description                                | Default    |
 | ------------------- | ------------------------------------------ | ---------- |
 | `CACHE_DRIVER`      | Cache Driver `file` `redis` `database`     | `file`     |
 | `FILESYSTEM_DRIVER` | Filesystem Driver `local` `public`         | `local`    |
@@ -175,7 +174,7 @@ Be sure to view the following repositories to understand all the customizable op
 | `QUEUE_CONNECTION`  | Queue Connection  `sync` `file` `redis`    | `file`     |
 
 #### S3 Settings
-| Parameter     | Description                                | default |
+| Parameter     | Description                                | Default |
 | ------------- | ------------------------------------------ | ------- |
 | `S3_BUCKET`   | S3 Bucket eg `bucket_name`                 |         |
 | `S3_ENDPOINT` | S3 Endpoint eg `https://endpoint.com`      |         |
@@ -186,7 +185,6 @@ Be sure to view the following repositories to understand all the customizable op
 
 
 ### Networking
-
 The following ports are exposed.
 
 | Port | Description |
