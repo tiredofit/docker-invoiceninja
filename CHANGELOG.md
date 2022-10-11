@@ -1,3 +1,9 @@
+## 0.99.4 2022-10-11 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Fix duplicate OPENXCHANGE API
+
+
 ## 0.99.3 2022-10-11 <dave at tiredofit dot ca>
 
    ### Added
