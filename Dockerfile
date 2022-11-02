@@ -1,7 +1,7 @@
 FROM docker.io/tiredofit/nginx-php-fpm:8.1
 LABEL maintainer="Dave Conroy (github.com/tiredofit)"
 
-ENV INVOICENINJA_VERSION=v5.5.36 \
+ENV INVOICENINJA_VERSION=v5.5.37 \
     INVOICENINJA_REPO_URL=https://github.com/invoiceninja/invoiceninja \
     NGINX_WEBROOT=/www/html \
     NGINX_SITE_ENABLED=invoiceninja \
@@ -60,4 +60,4 @@ RUN source /assets/functions/00-container && \
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
 ### Assets
-ADD install /
+COPY install /
