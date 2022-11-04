@@ -33,7 +33,7 @@ if [ ! -f "${NGINX_WEBROOT}"/public/index.php ]; then
     fi
     chown -R "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"
 else
-    if var_true "${ENABLE_AUTO_UPDATE"} ; then
+    if var_true "${ENABLE_AUTO_UPDATE}" ; then
         if [ "${INVOICENINJA_VERSION}" != $(head -n 1 "${NGINX_WEBROOT}"/.invoiceninja-version | awk '{print $1'}) ]; then
         print_warn "Detected in place Invoice Ninja version $(head -n 1 "${NGINX_WEBROOT}"/.invoiceninja-version | awk "{print $1"}) - Upgrading to ${INVOICENINJA_VERSION}"
             cp -R /assets/install/* "${NGINX_WEBROOT}"
