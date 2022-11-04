@@ -1,3 +1,9 @@
+## 0.99.11 2022-11-04 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Fix some weirdness with auto upgrade routines
+
+
 ## 0.99.10 2022-11-02 <dave at tiredofit dot ca>
 
    ### Added
