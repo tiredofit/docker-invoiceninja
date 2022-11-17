@@ -1,3 +1,9 @@
+## 0.99.16 2022-11-17 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Fix for 0.99.14 - Close sed tag properly
+
+
 ## 0.99.15 2022-11-17 <dave at tiredofit dot ca>
 
    ### Added
