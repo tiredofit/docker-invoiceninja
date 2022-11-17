@@ -1,3 +1,9 @@
+## 0.99.15 2022-11-17 <dave at tiredofit dot ca>
+
+   ### Added
+      - Add SMTP_TLS_VERIFY_PEER environment variable (default: FALSE) to allow to still send should peer certificate not match
+
+
 ## 0.99.14 2022-11-16 <dave at tiredofit dot ca>
 
    ### Added

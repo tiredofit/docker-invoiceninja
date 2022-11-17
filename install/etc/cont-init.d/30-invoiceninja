@@ -96,6 +96,7 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         sed -i --follow-symlinks "s|MAIL_HOST=.*|MAIL_HOST=${SMTP_HOST}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|MAIL_PORT=.*|MAIL_PORT=${SMTP_PORT}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|MAIL_ENCRYPTION=.*|MAIL_ENCRYPTION=${SMTP_ENCRYPTION}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|MAIL_VERIFY_PEER=.*|MAIL_VERIFY_PEER=${SMTP_TLS_VERIFY_PEER}" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|MAIL_USERNAME=.*|MAIL_USERNAME=${SMTP_USER}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|MAIL_PASSWORD=.*|MAIL_PASSWORD=${SMTP_PASS}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|MAIL_FROM_ADDRESS=.*|MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}|g" "${NGINX_WEBROOT}"/.env
@@ -267,6 +268,7 @@ else
     echo "MAIL_HOST=${SMTP_HOST}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "MAIL_PORT=${SMTP_PORT}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "MAIL_ENCRYPTION=${SMTP_ENCRYPTION}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "MAIL_VERIFY_PEER=${SMTP_TLS_VERIFY_PEER}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "MAIL_USERNAME=${SMTP_USER}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "MAIL_PASSWORD=${SMTP_PASS}" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "MAIL_FROM_ADDRESS='${MAIL_FROM_ADDRESS}'" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env

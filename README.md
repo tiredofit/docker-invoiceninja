@@ -152,26 +152,27 @@ Be sure to view the following repositories to understand all the customizable op
 
 
 #### Mail Settings
-| Parameter            | Description                                                                    | Default               |
-| -------------------- | ------------------------------------------------------------------------------ | --------------------- |
-| `MAIL_TYPE`          | Mail Type                                                                      | `smtp`                |
-| `MAIL_ERROR_ADDRESS` | Email this address upon encountering any errors                                |                       |
-| `MAIL_FROM_NAME`     | Mail from Name                                                                 | `Invoice Ninja`       |
-| `MAIL_FROM_ADDRESS`  | Mail from Address                                                              | `noreply@example.com` |
-| `SMTP_HOST`          | SMTP Server to be used to send messages from Postal Management System to users | `postfix-relay`       |
-| `SMTP_PORT`          | SMTP Port to be used to send messages from Postal Management System to Users   | `25`                  |
-| `SMTP_USER`          | Username to authenticate to SMTP Server                                        | `null`                |
-| `SMTP_PASS`          | Password to authenticate to SMTP Server                                        | `null`                |
-| `SMTP_ENCRYPTION`    | Type of encryption for SMTP `none` `tls`                                       | `none`                |
-| `POSTMARK_SECRET`    | Postmark secret (if using postmark)                                            |                       |
+| Parameter              | Description                                                                    | Default               |
+| ---------------------- | ------------------------------------------------------------------------------ | --------------------- |
+| `MAIL_TYPE`            | Mail Type                                                                      | `smtp`                |
+| `MAIL_ERROR_ADDRESS`   | Email this address upon encountering any errors                                |                       |
+| `MAIL_FROM_NAME`       | Mail from Name                                                                 | `Invoice Ninja`       |
+| `MAIL_FROM_ADDRESS`    | Mail from Address                                                              | `noreply@example.com` |
+| `SMTP_HOST`            | SMTP Server to be used to send messages from Postal Management System to users | `postfix-relay`       |
+| `SMTP_PORT`            | SMTP Port to be used to send messages from Postal Management System to Users   | `25`                  |
+| `SMTP_USER`            | Username to authenticate to SMTP Server                                        | `null`                |
+| `SMTP_PASS`            | Password to authenticate to SMTP Server                                        | `null`                |
+| `SMTP_ENCRYPTION`      | Type of encryption for SMTP `null` `tls`                                       | `null`                |
+| `SMTP_TLS_VERIFY_PEER` | Verify TLS certificate before sending                                          | `false`               |
+| `POSTMARK_SECRET`      | Postmark secret (if using postmark)                                            |                       |
 
 #### Performance Settings
-| Parameter           | Description                                | Default    |
-| ------------------- | ------------------------------------------ | ---------- |
-| `CACHE_DRIVER`      | Cache Driver `file` `redis` `database`     | `file`     |
-| `FILESYSTEM_DRIVER` | Filesystem Driver `local` `public`         | `local`    |
-| `SESSION_DRIVER`    | Session Driver  `file` `redis` `database`  | `database` |
-| `QUEUE_CONNECTION`  | Queue Connection  `sync` `file` `redis`    | `file`     |
+| Parameter           | Description                               | Default    |
+| ------------------- | ----------------------------------------- | ---------- |
+| `CACHE_DRIVER`      | Cache Driver `file` `redis` `database`    | `file`     |
+| `FILESYSTEM_DRIVER` | Filesystem Driver `local` `public`        | `local`    |
+| `SESSION_DRIVER`    | Session Driver  `file` `redis` `database` | `database` |
+| `QUEUE_CONNECTION`  | Queue Connection  `sync` `file` `redis`   | `file`     |
 
 #### S3 Settings
 | Parameter     | Description                                | Default |
