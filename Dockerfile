@@ -1,7 +1,7 @@
 FROM docker.io/tiredofit/nginx-php-fpm:8.1
 LABEL maintainer="Dave Conroy (github.com/tiredofit)"
 
-ENV INVOICENINJA_VERSION=v5.5.40 \
+ENV INVOICENINJA_VERSION=v5.5.41 \
     INVOICENINJA_REPO_URL=https://github.com/invoiceninja/invoiceninja \
     NGINX_WEBROOT=/www/html \
     NGINX_SITE_ENABLED=invoiceninja \
