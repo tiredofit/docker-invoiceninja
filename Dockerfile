@@ -1,7 +1,12 @@
-FROM docker.io/tiredofit/nginx-php-fpm:8.1
+ARG PHP_BASE=8.1
+ARG DISTRO="alpine"
+
+FROM docker.io/tiredofit/nginx-php-fpm:${PHP_BASE}-${DISTRO}
 LABEL maintainer="Dave Conroy (github.com/tiredofit)"
 
-ENV INVOICENINJA_VERSION=v5.5.43 \
+ARG INVOICENINJA_VERSION
+
+ENV INVOICENINJA_VERSION=${INVOICENINJA_VERSION:-"v5.5.44"} \
     INVOICENINJA_REPO_URL=https://github.com/invoiceninja/invoiceninja \
     NGINX_WEBROOT=/www/html \
     NGINX_SITE_ENABLED=invoiceninja \
@@ -25,14 +30,14 @@ ENV INVOICENINJA_VERSION=v5.5.43 \
 
 RUN source /assets/functions/00-container && \
     set -x && \
-    apk update && \
-    apk upgrade && \
-    apk add -t .invoiceninja-build-deps \
+    package update && \
+    package upgrade upgrade && \
+    package install .invoiceninja-build-deps \
               git \
               nodejs \
               npm \
               && \
-    apk add -t .invoiceninja-run-deps \
+    package install .invoiceninja-run-deps \
               chromium \
               font-isas-misc \
               gnu-libiconv \
@@ -52,12 +57,13 @@ RUN source /assets/functions/00-container && \
         /assets/install/docs \
         /assets/install/tests \
         && \
-    rm -rf /root/.composer && \
-    apk del .invoiceninja-build-deps && \
-    rm -rf /var/tmp/* /var/cache/apk/* && \
-    rm -rf /root/.npm /root/.cache
+    package remove .invoiceninja-build-deps && \
+    package cleanup && \
+    rm -rf /root/.cache \
+           /root/.composer \
+           /root/.npm \
+           /var/tmp
 
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
-### Assets
 COPY install /

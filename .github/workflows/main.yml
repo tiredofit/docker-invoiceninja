@@ -9,7 +9,10 @@ on:
     - '**'
     - '!README.md'
 jobs:
-  docker:
+  build:
+    env:
+      PHP_VERSION: "8.1"
+      DISTRO: "alpine"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -109,3 +112,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.prep.outputs.tags }}
+          build-args: |
+            DISTRO=${{ env.DISTRO }}
+            PHP_BASE=${{ env.PHP_VERSION }}
