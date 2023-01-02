@@ -1,7 +1,7 @@
 # github.com/tiredofit/docker-invoiceninja
 
 [![GitHub release](https://img.shields.io/github/v/tag/tiredofit/docker-invoiceninja?style=flat-square)](https://github.com/tiredofit/docker-invoiceninja/releases/latest)
-[![Build Status](https://img.shields.io/github/workflow/status/tiredofit/docker-invoiceninja/build?style=flat-square)](https://github.com/tiredofit/docker-invoiceninja/actions?query=workflow%3Abuild)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/tiredofit/docker-invoiceninja/main.yml?branch=main&style=flat-square)](https://github.com/tiredofit/docker-invoiceninja/actions)
 [![Docker Stars](https://img.shields.io/docker/stars/tiredofit/invoiceninja.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/tiredofit/invoiceninja/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/tiredofit/invoiceninja.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/tiredofit/invoiceninja/)
 [![Become a sponsor](https://img.shields.io/badge/sponsor-tiredofit-181717.svg?logo=github&style=flat-square)](https://github.com/sponsors/tiredofit)
