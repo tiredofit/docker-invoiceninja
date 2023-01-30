@@ -72,7 +72,7 @@ docker pull docker.io/tiredofdit/invoiceninja:(imagetag)
 Builds of the image are also available on the [Github Container Registry](https://github.com/tiredofit/docker-invoiceninja/pkgs/container/docker-invoiceninja) 
  
 ```
-docker pull ghcr.io/tiredofit/docker-invoiceninja/pkgs/container/docker-invoiceninja):(imagetag)
+docker pull ghcr.io/tiredofit/docker-invoiceninja:(imagetag)
 ``` 
 
 The following image tags are available along with their tagged release based on what's written in the [Changelog](CHANGELOG.md):
