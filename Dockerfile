@@ -1,12 +1,12 @@
-ARG PHP_BASE=8.1
+ARG PHP_VERSION=8.1
 ARG DISTRO="alpine"
 
-FROM docker.io/tiredofit/nginx-php-fpm:${PHP_BASE}-${DISTRO}
+FROM docker.io/tiredofit/nginx-php-fpm:${PHP_VERSION}-${DISTRO}
 LABEL maintainer="Dave Conroy (github.com/tiredofit)"
 
 ARG INVOICENINJA_VERSION
 
-ENV INVOICENINJA_VERSION=${INVOICENINJA_VERSION:-"v5.5.93"} \
+ENV INVOICENINJA_VERSION=${INVOICENINJA_VERSION:-"v5.5.94"} \
     INVOICENINJA_REPO_URL=https://github.com/invoiceninja/invoiceninja \
     NGINX_WEBROOT=/www/html \
     NGINX_SITE_ENABLED=invoiceninja \
