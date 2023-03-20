@@ -1,3 +1,9 @@
+## 0.99.64 2023-03-20 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Stop preloading iconv
+
+
 ## 0.99.63 2023-03-17 <dave at tiredofit dot ca>
 
    ### Added

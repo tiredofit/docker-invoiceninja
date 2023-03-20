@@ -64,6 +64,4 @@ RUN source /assets/functions/00-container && \
            /root/.npm \
            /var/tmp
 
-ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
-
 COPY install /
