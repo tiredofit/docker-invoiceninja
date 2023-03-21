@@ -1,3 +1,9 @@
+## 0.99.65 2023-03-21 <dave at tiredofit dot ca>
+
+   ### Added
+      - Invoice Ninja 5.5.96
+
+
 ## 0.99.64 2023-03-20 <dave at tiredofit dot ca>
 
    ### Changed
