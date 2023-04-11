@@ -1,3 +1,9 @@
+## 0.99.72 2023-04-11 <dave at tiredofit dot ca>
+
+   ### Added
+      - Add Invoice Ninja logrotation
+
+
 ## 0.99.71 2023-04-11 <dave at tiredofit dot ca>
 
    ### Changed

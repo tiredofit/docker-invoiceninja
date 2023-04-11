@@ -52,7 +52,8 @@ mkdir -p /www/logs/invoiceninja
 chown -R "${NGINX_USER}":"${NGINX_GROUP}" /www/logs/invoiceninja
 rm -rf "${NGINX_WEBROOT}"/storage/logs
 ln -sf /www/logs/invoiceninja "${NGINX_WEBROOT}"/storage/logs
-create_logrotate invoiceninja  /www/logs/invoiceninja/laravel.log "${NGINX_USER}" "${NGINX_GROUP}"
+create_logrotate invoiceninja  /www/logs/invoiceninja/invoiceninja.log "${NGINX_USER}" "${NGINX_GROUP}"
+create_logrotate invoiceninja_laravel  /www/logs/invoiceninja/laravel.log "${NGINX_USER}" "${NGINX_GROUP}"
 custom_files "${CONTAINER_CUSTOM_PATH}" "${NGINX_WEBROOT}" "${NGINX_USER}" "${NGINX_GROUP}"
 custom_scripts
 
