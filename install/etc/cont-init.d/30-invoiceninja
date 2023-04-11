@@ -213,6 +213,9 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         else
             sed -i --follow-symlinks "/.*OPENEXCHANGE_APP_ID=.*/c\#OPENEXCHANGE_APP_ID=" "${NGINX_WEBROOT}"/.env
         fi
+        if ! grep -q "SNAPPDF_CHROMIUM_PATH" ; then
+            echo "SNAPPDF_CHROMIUM_PATH=/usr/bin/chromium-browser" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+        fi
     else
         print_info "Skipping Auto configuration and using in place .env"
     fi
@@ -392,6 +395,7 @@ else
     echo "" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "EXPANDED_LOGGING=true" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     echo "PDF_GENERATOR=snappdf" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
+    echo "SNAPPDF_CHROMIUM_PATH=/usr/bin/chromium-browser" | silent sudo -u "${NGINX_USER}" tee -a "${NGINX_WEBROOT}"/.env
     # Generate Key
     cd "${NGINX_WEBROOT}"/
     chown -R "${NGINX_USER}":"${NGINX_GROUP}" "${NGINX_WEBROOT}"/config

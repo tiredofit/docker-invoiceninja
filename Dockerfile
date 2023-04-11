@@ -52,16 +52,18 @@ RUN source /assets/functions/00-container && \
     composer install --no-dev --quiet && \
     chown -R ${NGINX_USER}:${NGINX_GROUP} /assets/install && \
     rm -rf \
-        /assets/install/.env.example \
-        /assets/install/.env.travis \
-        /assets/install/docs \
-        /assets/install/tests \
-        && \
+            /assets/install/.env.example \
+            /assets/install/.env.travis \
+            /assets/install/.git \
+            /assets/install/docs \
+            /assets/install/tests \
+            && \
     package remove .invoiceninja-build-deps && \
     package cleanup && \
-    rm -rf /root/.cache \
-           /root/.composer \
-           /root/.npm \
-           /var/tmp
+    rm -rf \
+            /root/.cache \
+            /root/.composer \
+            /root/.npm \
+            /var/tmp
 
 COPY install /

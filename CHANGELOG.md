@@ -1,3 +1,10 @@
+## 0.99.71 2023-04-11 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Reduce Image Size drastically
+      - Change the way Invoices are generated via email
+
+
 ## 0.99.70 2023-04-08 <dave at tiredofit dot ca>
 
    ### Added
