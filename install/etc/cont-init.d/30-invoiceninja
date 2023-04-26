@@ -58,6 +58,30 @@ custom_files "${CONTAINER_CUSTOM_PATH}" "${NGINX_WEBROOT}" "${NGINX_USER}" "${NG
 custom_scripts
 
 #### Dynamically Create Configuration
+transform_var \
+                ADMIN_EMAIL \
+                ADMIN_PASS \
+                APP_KEY \
+                DB_HOST \
+                DB_PORT \
+                DB_NAME \
+                DB_USER \
+                DB_PASS \
+                POSTMARK_SECRET \
+                SMTP_USER \
+                SMTP_PORT \
+                SMTP_PASS \
+                API_SECRET \
+                GOOGLE_CLIENT_ID \
+                GOOGLE_CLIENT_SECRET \
+                GOOGLE_MAPS_API_KEY \
+                S3_BUCKET \
+                S3_ENDPOINT \
+                S3_KEY \
+                S3_SECRET \
+                S3_URL \
+                OPENEXCHANGE_APP_ID
+
 if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
     if [ "${SETUP_TYPE,,}" = "auto" ]; then
         sanity_db
@@ -74,6 +98,7 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         else
             sed -i --follow-symlinks "s|APP_URL=.*|APP_URL=${SITE_URL}|g" "${NGINX_WEBROOT}"/.env
         fi
+        transform_var APP_KEY
         if [ -n "${APP_KEY}" ]; then
             sed -i --follow-symlinks "/.*APP_KEY=.*/c\APP_KEY=${APP_KEY}" "${NGINX_WEBROOT}"/.env
         fi
