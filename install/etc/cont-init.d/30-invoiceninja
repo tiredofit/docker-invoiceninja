@@ -58,7 +58,7 @@ custom_files "${CONTAINER_CUSTOM_PATH}" "${NGINX_WEBROOT}" "${NGINX_USER}" "${NG
 custom_scripts
 
 #### Dynamically Create Configuration
-transform_var \
+transform_file_var \
                 ADMIN_EMAIL \
                 ADMIN_PASS \
                 APP_KEY \
@@ -98,7 +98,7 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
         else
             sed -i --follow-symlinks "s|APP_URL=.*|APP_URL=${SITE_URL}|g" "${NGINX_WEBROOT}"/.env
         fi
-        transform_var APP_KEY
+        transform_file_var APP_KEY
         if [ -n "${APP_KEY}" ]; then
             sed -i --follow-symlinks "/.*APP_KEY=.*/c\APP_KEY=${APP_KEY}" "${NGINX_WEBROOT}"/.env
         fi
