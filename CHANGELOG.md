@@ -1,3 +1,9 @@
+## 1.0.11 2023-08-01 <dave at tiredofit dot ca>
+
+   ### Added
+      - Invoice Ninja 5.6.24
+
+
 ## 1.0.10 2023-07-27 <dave at tiredofit dot ca>
 
    ### Added
