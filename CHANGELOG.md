@@ -1,3 +1,9 @@
+## 1.0.33 2023-09-29 <dave at tiredofit dot ca>
+
+   ### Added
+      - Attempt aarch64 builds
+
+
 ## 1.0.32 2023-09-20 <dave at tiredofit dot ca>
 
    ### Added
