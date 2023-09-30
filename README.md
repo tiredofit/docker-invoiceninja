@@ -133,10 +133,10 @@ Be sure to view the following repositories to understand all the customizable op
 | `DISPLAY_ERRORS`          | Display Errors on Website                                                                          | `FALSE`         |         |
 | `ENABLE_AUTO_UPDATE`      | If coming from an earlier version of image, automatically update it to latest invoiceninja release | `TRUE`          |         |
 | `ENABLE_GOOGLE_MAPS`      | Enable Google Maps                                                                                 | `TRUE`          |         |
-| `ENABLE_SSL_PROXY`        | If using SSL reverse proxy force application to return https URLs `TRUE` or `FALSE`                |                 |         |
 | `LANGUAGE`                | What locale/language                                                                               | `en`            |         |
 | `LOG_PDF_HTML`            | Log HTML when generating PDF exports                                                               | `FALSE`         |         |
 | `OPENEXCHANGE_APP_ID`     | Open Exchange APP ID for currency exchange                                                         |                 |         |
+| `REQUIRE_HTTPS`           | If using SSL reverse proxy force application to return https URLs `TRUE` or `FALSE`                |                 |         |
 | `SETUP_TYPE`              | Automatically edit configuration after first bootup `AUTO` or `MANUAL`                             | `AUTO`          |         |
 | `SITE_URL`                | The url your site listens on example `https://invoiceninja.example.com`                            |                 |         |
 | `SESSION_REMEMBER`        | Remember users session                                                                             | `TRUE`          |         |
