@@ -1,3 +1,9 @@
+## 1.0.43 2023-10-20 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Fix build process relating to 'vite'
+
+
 ## 1.0.42 2023-10-19 <dave at tiredofit dot ca>
 
    ### Added

@@ -47,7 +47,7 @@ RUN source /assets/functions/00-container && \
     \
     php-ext enable core && \
     clone_git_repo ${INVOICENINJA_REPO_URL} ${INVOICENINJA_VERSION} /assets/install && \
-    npm install --production && \
+    npm install && \
     npm run production && \
     composer install --no-dev --quiet && \
     chown -R ${NGINX_USER}:${NGINX_GROUP} /assets/install && \
