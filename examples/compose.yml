@@ -1,5 +1,3 @@
-version: '2'
-
 services:
   
   invoiceninja-app:
@@ -36,7 +34,7 @@ services:
     restart: always
 
   invoiceninja-db:
-    image: tiredofit/mariadb:10.8-latest
+    image: tiredofit/mariadb:10.11
     container_name: invoiceninja-db
     volumes:
       - ./db:/var/lib/mysql
@@ -55,21 +53,22 @@ services:
 
   invoiceninja-db-backup:
     container_name: invoiceninja-db-backup
-    image: tiredofit/db-backup:latst
+    image: tiredofit/db-backup:latest
     links:
      - invoiceninja-db
     volumes:
       - ./dbbackup:/backup
     environment:
+      - TIMEZONE=America/Vancouver
       - CONTAINER_NAME=invoiceninja-db-backup
-      - DB_HOST=invoiceninja-db
-      - DB_TYPE=mariadb
-      - DB_NAME=invoiceninja
-      - DB_USER=invoiceninja
-      - DB_PASS=invoiceninja
+      - DB01_HOST=invoiceninja-db
+      - DB01_TYPE=mariadb
+      - DB01_NAME=invoiceninja
+      - DB01_USER=invoiceninja
+      - DB01_PASS=invoiceninja
       - DB01_BACKUP_INTERVAL=1440
       - DB01_BACKUP_BEGIN=0000
-      - DB_CLEANUP_TIME=8640
+      - DB01_CLEANUP_TIME=8640
     networks:
       - services
     restart: always
