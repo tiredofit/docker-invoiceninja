@@ -175,7 +175,7 @@ if grep -q "^APP_URL=" "${NGINX_WEBROOT}"/.env > /dev/null 2>&1; then
             sed -i --follow-symlinks "/.*CACHE_HOST=.*/c\#CACHE_HOST=" "${NGINX_WEBROOT}"/.env
         fi
         sed -i --follow-symlinks "s|REDIS_HOST=.*|REDIS_HOST=${REDIS_HOST}|g" "${NGINX_WEBROOT}"/.env
-        sed -i --follow-symlinks "s|REDIS_PORT=.*|REDIS_PORT=${REDIS_HOST}|g" "${NGINX_WEBROOT}"/.env
+        sed -i --follow-symlinks "s|REDIS_PORT=.*|REDIS_PORT=${REDIS_PORT}|g" "${NGINX_WEBROOT}"/.env
         sed -i --follow-symlinks "s|REDIS_PASSWORD=.*|REDIS_PASSWORD=${REDIS_PASS}|g" "${NGINX_WEBROOT}"/.env
         if [ -n "${CACHE_PORT1}" ]; then
             sed -i --follow-symlinks "/.*CACHE_PORT1=.*/c\CACHE_PORT1=${CACHE_PORT1}" "${NGINX_WEBROOT}"/.env
