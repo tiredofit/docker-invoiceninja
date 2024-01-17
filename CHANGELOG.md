@@ -1,3 +1,9 @@
+## 1.0.78 2024-01-16 <ToshY@github>
+
+   ### Changed
+      - Fix for REDIS_PORT defining REDIS_HOST erroneously
+
+
 ## 1.0.77 2024-01-12 <dave at tiredofit dot ca>
 
    ### Added
