@@ -1,3 +1,12 @@
+## 1.0.90 2024-04-01 <dave at tiredofit dot ca>
+
+   ### Added
+      - Invoice Ninja 5.8.39
+
+   ### Changed
+      - Fix build by swapping dependencies order
+
+
 ## 1.0.89 2024-03-14 <dave at tiredofit dot ca>
 
    ### Added

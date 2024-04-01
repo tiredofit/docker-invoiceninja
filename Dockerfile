@@ -6,7 +6,7 @@ LABEL maintainer="Dave Conroy (github.com/tiredofit)"
 
 ARG INVOICENINJA_VERSION
 
-ENV INVOICENINJA_VERSION=${INVOICENINJA_VERSION:-"v5.8.36"} \ 
+ENV INVOICENINJA_VERSION=${INVOICENINJA_VERSION:-"v5.8.39"} \
     INVOICENINJA_REPO_URL=https://github.com/invoiceninja/invoiceninja \
     NGINX_WEBROOT=/www/html \
     NGINX_SITE_ENABLED=invoiceninja \
@@ -47,9 +47,11 @@ RUN source /assets/functions/00-container && \
     \
     php-ext enable core && \
     clone_git_repo ${INVOICENINJA_REPO_URL} ${INVOICENINJA_VERSION} /assets/install && \
+    \
     npm install && \
-    npm run production && \
     composer install --no-dev --quiet && \
+    npm run production && \
+    \
     chown -R ${NGINX_USER}:${NGINX_GROUP} /assets/install && \
     rm -rf \
             /assets/install/.env.example \
