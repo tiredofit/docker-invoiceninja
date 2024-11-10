@@ -1,3 +1,9 @@
+## 1.0.139 2024-11-10 <dave at tiredofit dot ca>
+
+   ### Added
+      - Invoice Ninja 5.10.45
+
+
 ## 1.0.138 2024-10-25 <dave at tiredofit dot ca>
 
    ### Added
