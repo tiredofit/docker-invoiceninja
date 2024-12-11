@@ -1,3 +1,9 @@
+## 1.0.150 2024-12-11 <dave at tiredofit dot ca>
+
+   ### Added
+      - Pin to tiredofit/nginx-php-fpm:8.2-alpine-7.7.15 to resolve some internal container check issues
+
+
 ## 1.0.149 2024-12-08 <dave at tiredofit dot ca>
 
    ### Added
