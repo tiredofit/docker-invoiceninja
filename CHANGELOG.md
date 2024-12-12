@@ -1,3 +1,10 @@
+## 1.1.0 2024-12-12 <dave at tiredofit dot ca>
+
+   ### Added
+      - Add React UI 11.12.2024.1
+      - Pin to tiredofit/nginx-php-fpm:8.3-apine-7.7.16
+
+
 ## 1.0.150 2024-12-11 <dave at tiredofit dot ca>
 
    ### Added
