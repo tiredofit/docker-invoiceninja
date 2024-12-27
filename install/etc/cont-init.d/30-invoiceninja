@@ -2,7 +2,7 @@
 
 source /assets/functions/00-container
 prepare_service
-PROCESS_NAME="invoiceninja"
+SERVICE_NAME="invoiceninja"
 
 check_service_initialized init 20-php-fpm
 
