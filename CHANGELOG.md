@@ -1,3 +1,10 @@
+## 1.1.23 2025-02-04 <dave at tiredofit dot ca>
+
+   ### Added
+      - Invoice Ninja 5.11.36
+      - Invoice Ninja UI 27.1.2025
+
+
 ## 1.1.22 2025-02-01 <dave at tiredofit dot ca>
 
    ### Added
