@@ -1,3 +1,9 @@
+## 1.1.29 2025-02-25 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Attempt upstream PHP image module reset routines when installing to avoid stale base image issues
+
+
 ## 1.1.28 2025-02-18 <dave at tiredofit dot ca>
 
    ### Added

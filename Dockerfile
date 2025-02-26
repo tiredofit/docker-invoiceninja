@@ -53,6 +53,8 @@ RUN source /assets/functions/00-container && \
               ttf-freefont \
               && \
     \
+    php-ext prepare && \
+    php-ext reset && \
     php-ext enable core && \
     clone_git_repo "${INVOICENINJA_REPO_URL}" "${INVOICENINJA_VERSION}" /assets/install && \
     \
