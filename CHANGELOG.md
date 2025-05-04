@@ -1,3 +1,10 @@
+## 1.1.43 2025-05-03 <dave at tiredofit dot ca>
+
+   ### Added
+      - Pin to tiredofit/nginx-php-fpm:7.7.19
+      - Invoice Ninja 5.7.73
+
+
 ## 1.1.42 2025-04-24 <dave at tiredofit dot ca>
 
    ### Added
