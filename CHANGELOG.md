@@ -1,3 +1,10 @@
+## 1.1.49 2025-06-04 <dave at tiredofit dot ca>
+
+   ### Added
+      - Invoice Ninja 5.12.0
+      - Invoice Ninja React UI 23.05.2025.1
+
+
 ## 1.1.48 2025-06-03 <dave at tiredofit dot ca>
 
    ### Added
