@@ -6,7 +6,7 @@ LABEL maintainer="Dave Conroy (github.com/tiredofit)"
 
 ARG INVOICENINJA_VERSION
 
-ENV INVOICENINJA_VERSION=${INVOICENINJA_VERSION:-"v5.12.15"} \
+ENV INVOICENINJA_VERSION=${INVOICENINJA_VERSION:-"v5.12.16"} \
     INVOICENINJA_REACT_VERSION=${INVOICENINJA_REACT_VERSION:-"18.07.2025.1"} \
     INVOICENINJA_REPO_URL=https://github.com/invoiceninja/invoiceninja \
     INVOICENINJA_REACT_REPO_URL=https://github.com/invoiceninja/ui \
