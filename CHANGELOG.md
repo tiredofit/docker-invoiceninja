@@ -1,7 +1,11 @@
+## 1.2.0pre 2025-10-06 <code at nfrastack dot com>
+
+   ### Changed
+      - Change base to nfrastack/nginx-php-fpm
+
 ## 1.1.99 2025-10-06 <dave at tiredofit dot ca>
 
-Add EOL notice and deprecate image
-
+   Add EOL notice and deprecate image
 
 ## 1.1.63 2025-08-15 <dave at tiredofit dot ca>
 

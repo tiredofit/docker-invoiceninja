@@ -1,126 +1,102 @@
-# github.com/tiredofit/docker-invoiceninja
+# nfrastack/container-invoiceninja
 
-[![GitHub release](https://img.shields.io/github/v/tag/tiredofit/docker-invoiceninja?style=flat-square)](https://github.com/tiredofit/docker-invoiceninja/releases/latest)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/tiredofit/docker-invoiceninja/main.yml?branch=main&style=flat-square)](https://github.com/tiredofit/docker-invoiceninja/actions)
-[![Docker Stars](https://img.shields.io/docker/stars/tiredofit/invoiceninja.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/tiredofit/invoiceninja/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/tiredofit/invoiceninja.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/tiredofit/invoiceninja/)
-[![Become a sponsor](https://img.shields.io/badge/sponsor-tiredofit-181717.svg?logo=github&style=flat-square)](https://github.com/sponsors/tiredofit)
-[![Paypal Donate](https://img.shields.io/badge/donate-paypal-00457c.svg?logo=paypal&style=flat-square)](https://www.paypal.me/tiredofit)
-
-* * *
 ## About
 
-This will build a Docker Image for [Invoice Ninja](https://invoiceninja.org/) - An invoicing tool
-
-* Automatically installs and sets up installation upon first start
-
+This repository will build a container image for running [Invoice Ninja](https://www.invoiceninja.org/) applications either in a development or production capacity, including [Nginx](https://www.nginx.org) w/[PHP-FPM](https://php.net).
 
 ## Maintainer
 
-- [Dave Conroy](https://github.com/tiredofit)
+* [Nfrastack](https://www.nfrastack.com)
 
 ## Table of Contents
 
-
-- [About](#about)
-- [Maintainer](#maintainer)
-- [Table of Contents](#table-of-contents)
-- [Prerequisites and Assumptions](#prerequisites-and-assumptions)
-- [Installation](#installation)
-  - [Build from Source](#build-from-source)
-  - [Prebuilt Images](#prebuilt-images)
-- [Configuration](#configuration)
-  - [Quick Start](#quick-start)
-  - [Persistent Storage](#persistent-storage)
-  - [Environment Variables](#environment-variables)
-    - [Base Images used](#base-images-used)
-    - [Application Settings](#application-settings)
-    - [Database Settings](#database-settings)
-    - [Mail Settings](#mail-settings)
-    - [Performance Settings](#performance-settings)
-    - [S3 Settings](#s3-settings)
-  - [Networking](#networking)
-- [Maintenance](#maintenance)
-  - [Shell Access](#shell-access)
-- [Support](#support)
-  - [Usage](#usage)
-  - [Bugfixes](#bugfixes)
-  - [Feature Requests](#feature-requests)
-  - [Updates](#updates)
-- [License](#license)
-- [References](#references)
-
-## Prerequisites and Assumptions
-*  Assumes you are using some sort of SSL terminating reverse proxy such as:
-   *  [Traefik](https://github.com/tiredofit/docker-traefik)
-   *  [Nginx](https://github.com/jc21/nginx-proxy-manager)
-   *  [Caddy](https://github.com/caddyserver/caddy)
-*  Requires access to a MySQL/MariaDB Server
+* [About](#about)
+* [Maintainer](#maintainer)
+* [Table of Contents](#table-of-contents)
+* [Installation](#installation)
+  * [Prebuilt Images](#prebuilt-images)
+  * [Quick Start](#quick-start)
+  * [Persistent Storage](#persistent-storage)
+* [Configuration](#configuration)
+  * [Environment Variables](#environment-variables)
+    * [Base Images used](#base-images-used)
+    * [Core Configuration](#core-configuration)
+  * [Users and Groups](#users-and-groups)
+  * [Networking](#networking)
+* [Maintenance](#maintenance)
+  * [Shell Access](#shell-access)
+* [Support & Maintenance](#support--maintenance)
+* [License](#license)
+* [References](#references)
 
 ## Installation
 
-### Build from Source
-Clone this repository and build the image with `docker build -t (imagename) .`
-
 ### Prebuilt Images
-Builds of the image are available on [Docker Hub](https://hub.docker.com/r/tiredofit/invoiceninja)
 
-```bash
-docker pull docker.io/tiredofit/invoiceninja:(imagetag)
+Feature limited builds of the image are available on the [Github Container Registry](https://github.com/nfrastack/container-invoiceninja/pkgs/container/container-invoiceninja) and [Docker Hub](https://hub.docker.com/r/nfrastack/invoiceninja).
+
+To unlock advanced features, one must provide a code to be able to change specific environment variables from defaults. Support the development to gain access to a code.
+
+To get access to the image use your container orchestrator to pull from the following locations:
+
+```
+ghcr.io/nfrastack/container-invoiceninja:(image_tag)
+docker.io/nfrastack/invoiceninja:(image_tag)
 ```
 
-Builds of the image are also available on the [Github Container Registry](https://github.com/tiredofit/docker-invoiceninja/pkgs/container/docker-invoiceninja)
+Image tag syntax is:
 
-```
-docker pull ghcr.io/tiredofit/docker-invoiceninja:(imagetag)
-```
+`<image>:<optional tag>-<optional phpversion>`
 
-The following image tags are available along with their tagged release based on what's written in the [Changelog](CHANGELOG.md):
+Example:
 
-| Container OS | Tag       |
-| ------------ | --------- |
-| Alpine       | `:latest` |
+`docker.io/nfrastack/container-invoiceninja:latest` or
 
-## Configuration
+`ghcr.io/nfrastack/container-invoiceninja:1.0-php84`
+
+* `latest` will be the most recent commit
+
+* An optional `tag` may exist that matches the [CHANGELOG](CHANGELOG.md) - These are the safest
+
+* There may be an optional `phpversion` if there are mutiple builds using different PHP interpreters you may use those
+Have a look at the container registries and see what tags are available.
+
+#### Multi-Architecture Support
+
+Images are built for `amd64` by default, with optional support for `arm64` and other architectures.
 
 ### Quick Start
 
-- The quickest way to get started is using [docker-compose](https://docs.docker.com/compose/). See the examples folder for a working [compose.yml](examples/compose.yml) that can be modified for development or production use.
+* The quickest way to get started is using [docker-compose](https://docs.docker.com/compose/). See the examples folder for a working [compose.yml](examples/compose.yml) that can be modified for your use.
 
-- Set various [environment variables](#environment-variables) to understand the capabilities of this image.
-- Map [persistent storage](#data-volumes) for access to configuration and data files for backup.
-- Make [networking ports](#networking) available for public access if necessary
-
-**The first boot can take from 2 minutes - 5 minutes depending on your CPU to setup the proper schemas.**
-
-- Login to the web server and enter in your admin email address, admin password and start configuring the system!
+* Map [persistent storage](#persistent-storage) for access to configuration and data files for backup.
+* Set various [environment variables](#environment-variables) to understand the capabilities of this image.
 
 ### Persistent Storage
-The following directories are used for configuration and can be mapped for persistent storage.
 
-| Directory                | Description                                                                                                              |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| `/www/logs`              | Invoice Ninja, Nginx and PHP Log files                                                                                   |
-| `/assets/custom`         | (Optional) Copy source code over existing source code in /www/html upon container start. Use exact file/folder structure |
-| `/assets/custom-scripts` | (Optional) If you want to execute custom scripting, place scripts here with extension `.sh`                              |
-| `/www/html`              | (Optional) If you want to expose the invoiceninja sourcecode and enable Self Updating, expose this volume                |
-| *OR*                     |                                                                                                                          |
-| `/data`                  | Hold onto your persistent sessions and cache between container restarts                                                  |
+The following directories/files should be mapped for persistent storage in order to utilize the container effectively.
+
+| Directory            | Description           |
+| -------------------- | --------------------- |
+| `/data`          | Volatile Information      |
+| `/logs/invoiceninja` | invoiceninja Logfiles |
 
 ### Environment Variables
 
 #### Base Images used
 
-This image relies on an [Alpine Linux](https://hub.docker.com/r/tiredofit/alpine) base image that relies on an [init system](https://github.com/just-containers/s6-overlay) for added capabilities. Outgoing SMTP capabilities are handlded via `msmtp`. Individual container performance monitoring is performed by [zabbix-agent](https://zabbix.org). Additional tools include: `bash`,`curl`,`less`,`logrotate`,`nano`.
-
+This image relies on a customized base image in order to work.
 Be sure to view the following repositories to understand all the customizable options:
 
-| Image                                                         | Description                            |
-| ------------------------------------------------------------- | -------------------------------------- |
-| [OS Base](https://github.com/tiredofit/docker-alpine/)        | Customized Image based on Alpine Linux |
-| [Nginx](https://github.com/tiredofit/docker-nginx/)           | Nginx webserver                        |
-| [PHP-FPM](https://github.com/tiredofit/docker-nginx-php-fpm/) | PHP Interpreter                        |
+| Image                                                                 | Description         |
+| --------------------------------------------------------------------- | ------------------- |
+| [OS Base](https://github.com/nfrastack/container-base/)               | Base Image          |
+| [Nginx](https://github.com/nfrastack/container-nginx/)                | Nginx Webserver     |
+| [Nginx PHP-FPM](https://github.com/nfrastack/container-nginx-php-fpm) | PHP-FPM Interpreter |
 
+Below is the complete list of available options that can be used to customize your installation.
+
+* Variables showing an 'x' under the `Advanced` column can only be set if the containers advanced functionality is enabled.
 
 #### Application Settings
 | Parameter                 | Description                                                                                        | Default         | `_FILE` |
@@ -145,6 +121,7 @@ Be sure to view the following repositories to understand all the customizable op
 
 
 #### Database Settings
+
 | Parameter    | Description                                                     | Default | `_FILE` |
 | ------------ | --------------------------------------------------------------- | ------- | ------- |
 | `DB_HOST`    | Host or container name of MariaDB Server e.g. `invoiceninja-db` |         | x       |
@@ -152,12 +129,14 @@ Be sure to view the following repositories to understand all the customizable op
 | `DB_NAME`    | MariaDB Database name e.g. `invoiceninja`                       |         | x       |
 | `DB_USER`    | MariaDB Username for above Database e.g. `invoiceninja`         |         | x       |
 | `DB_PASS`    | MariaDB Password for above Database e.g. `password`             |         | x       |
+| `DB_SSL`     | Enable SSL connectivity to DB_HOST                              | `FALSE` | x       |
 | `REDIS_HOST` | Redis Hostname                                                  | `redis` | x       |
 | `REDIS_PORT` | Redis Port                                                      | `6379`  | x       |
 | `REDIS_PASS` | (optional) Redis Password                                       | `null`  | x       |
 
 
 #### Mail Settings
+
 | Parameter              | Description                                                                    | Default               | `_FILE` |
 | ---------------------- | ------------------------------------------------------------------------------ | --------------------- | ------- |
 | `MAIL_TYPE`            | Mail Type                                                                      | `smtp`                |         |
@@ -173,6 +152,7 @@ Be sure to view the following repositories to understand all the customizable op
 | `POSTMARK_SECRET`      | Postmark secret (if using postmark)                                            |                       | x       |
 
 #### Performance Settings
+
 | Parameter           | Description                               | Default    |
 | ------------------- | ----------------------------------------- | ---------- |
 | `CACHE_DRIVER`      | Cache Driver `file` `redis` `database`    | `file`     |
@@ -181,6 +161,7 @@ Be sure to view the following repositories to understand all the customizable op
 | `QUEUE_CONNECTION`  | Queue Connection  `sync` `file` `redis`   | `file`     |
 
 #### S3 Settings
+
 | Parameter     | Description                                | Default | `_FILE` |
 | ------------- | ------------------------------------------ | ------- | ------- |
 | `S3_BUCKET`   | S3 Bucket eg `bucket_name`                 |         | x       |
@@ -190,44 +171,22 @@ Be sure to view the following repositories to understand all the customizable op
 | `S3_SECRET`   | S3 Key Secret eg `a_long_and_glorious_key` |         | x       |
 | `S3_URL`      | S3 URL eg `https://endpoint.com`           |         | x       |
 
-
-### Networking
-The following ports are exposed.
-
-| Port | Description |
-| ---- | ----------- |
-| `80` | HTTP        |
-
 * * *
+
 ## Maintenance
 
 ### Shell Access
 
-For debugging and maintenance purposes you may want access the containers shell.
+For debugging and maintenance, `bash` and `sh` are available in the container.
 
-``bash
-docker exec -it (whatever your container name is) bash
-``
-## Support
+## Support & Maintenance
 
-These images were built to serve a specific need in a production environment and gradually have had more functionality added based on requests from the community.
-### Usage
-- The [Discussions board](../../discussions) is a great place for working with the community on tips and tricks of using this image.
-- [Sponsor me](https://tiredofit.ca/sponsor) for personalized support
-### Bugfixes
-- Please, submit a [Bug Report](issues/new) if something isn't working as expected. I'll do my best to issue a fix in short order.
-
-### Feature Requests
-- Feel free to submit a feature request, however there is no guarantee that it will be added, or at what timeline.
-- [Sponsor me](https://tiredofit.ca/sponsor) regarding development of features.
-
-### Updates
-- Best effort to track upstream changes, More priority if I am actively using the image in a production environment.
-- [Sponsor me](https://tiredofit.ca/sponsor) for up to date releases.
+* For community help, tips, and community discussions, visit the [Discussions board](/discussions).
+* For personalized support or a support agreement, see [Nfrastack Support](https://nfrastack.com/).
+* To report bugs, submit a [Bug Report](issues/new). Usage questions will be closed as not-a-bug.
+* Feature requests are welcome, but not guaranteed. For prioritized development, consider a support agreement.
+* Updates are best-effort, with priority given to active production use and support agreements.
 
 ## License
-MIT. See [LICENSE](LICENSE) for more details.
 
-## References
-
-* <https://invoiceninja.com/>
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -1,7 +1,7 @@
 services:
   
   invoiceninja-app:
-    image: tiredofit/invoiceninja
+    image: docker.io/nfrastack/invoiceninja
     container_name: invoiceninja-app
     links:
       - invoiceninja-db
@@ -13,9 +13,8 @@ services:
       ### If you want to just keep the original source and add additional modules uncomment this line
       - ./logs/:/www/logs
     environment:
-      - CONTAINER_NAME=invoiceninja-app
       - TIMEZONE=America/Vancouver
-      
+
       - DB_HOST=invoiceninja-db
       - DB_NAME=invoiceninja
       - DB_USER=invoiceninja
@@ -34,12 +33,11 @@ services:
     restart: always
 
   invoiceninja-db:
-    image: tiredofit/mariadb:10.11
+    image: docker.io/tiredofit/mariadb:10.11
     container_name: invoiceninja-db
     volumes:
       - ./db:/var/lib/mysql
     environment:
-      - CONTAINER_NAME=invoiceninja-db
       - TIMEZONE=America/Vancouver
 
       - ROOT_PASS=password
@@ -53,14 +51,14 @@ services:
 
   invoiceninja-db-backup:
     container_name: invoiceninja-db-backup
-    image: tiredofit/db-backup:latest
+    image: docker.io/tiredofit/db-backup:latest
     links:
      - invoiceninja-db
     volumes:
       - ./dbbackup:/backup
     environment:
       - TIMEZONE=America/Vancouver
-      - CONTAINER_NAME=invoiceninja-db-backup
+
       - DB01_HOST=invoiceninja-db
       - DB01_TYPE=mariadb
       - DB01_NAME=invoiceninja
