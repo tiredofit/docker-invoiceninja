@@ -148,22 +148,29 @@ ENV INVOICENINJA_VERSION=${INVOICENINJA_VERSION:-"v5.12.16"} \
     IMAGE_NAME="tiredofit/invoiceninja" \
     IMAGE_REPO_URL="https://github.com/tiredofit/docker-invoiceninja/"
 
-RUN source /assets/functions/00-container && \
-    set -x && \
+RUN echo "" && \
+    INVOICENINJA_BUILD_DEPS_ALPINE=" \
+                                        git \
+                                        nodejs \
+                                        npm \
+                                   " \
+                                   && \
+    INVOICENINJA_RUN_DEPS_ALPINE=" \
+                                   chromium \
+                                   font-isas-misc \
+                                   gnu-libiconv \
+                                   sed \
+                                   ttf-freefont \
+                                 " \
+                                 && \
+    source /container/base/functions/container/build && \
+    container_build_log image && \
     package update && \
-    package upgrade upgrade && \
-    package install .invoiceninja-build-deps \
-              git \
-              nodejs \
-              npm \
-              && \
-    package install .invoiceninja-run-deps \
-              chromium \
-              font-isas-misc \
-              gnu-libiconv \
-              sed \
-              ttf-freefont \
-              && \
+    package upgrade && \
+    package install \
+                        INVOICENINJA_BUILD_DEPS \
+                        INVOICENINJA_RUN_DEPS \
+                        && \
     \
     php-ext prepare && \
     php-ext reset && \
@@ -181,7 +188,7 @@ RUN source /assets/functions/00-container && \
     cp -r dist/* /container/data/invoiceninja/install/public/ && \
     mv /container/data/invoiceninja/install/public/index.html /container/data/invoiceninja/install/resources/views/react/index.blade.php && \
     \
-    chown -R ${NGINX_USER}:${NGINX_GROUP} /container/data/invoiceninja/install && \
+    chown -R "${NGINX_USER}":"${NGINX_GROUP}" /container/data/invoiceninja/install && \
     rm -rf \
             /container/data/invoiceninja/install/.env.example \
             /container/data/invoiceninja/install/.env.travis \
@@ -196,4 +203,4 @@ RUN source /assets/functions/00-container && \
                     && \
     package cleanup
 
-COPY install /
+COPY rootfs /
